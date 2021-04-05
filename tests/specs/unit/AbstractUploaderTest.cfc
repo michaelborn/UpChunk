@@ -5,36 +5,36 @@
  */
 component extends="coldbox.system.testing.BaseModelTest" model="UpChunk.models.AbstractUploader" {
 
-	/*********************************** LIFE CYCLE Methods ***********************************/
+    /*********************************** LIFE CYCLE Methods ***********************************/
 
-	function beforeAll(){
-		super.beforeAll();
+    function beforeAll(){
+        super.beforeAll();
 
-		// setup the model
-		super.setup();
+        // setup the model
+        super.setup();
 
-		// init the model object
-		model.init();
-	}
+        // init the model object
+        model.init();
+    }
 
-	function afterAll(){
-		super.afterAll();
-	}
+    function afterAll(){
+        super.afterAll();
+    }
 
-	/*********************************** BDD SUITES ***********************************/
+    /*********************************** BDD SUITES ***********************************/
 
-	function run(){
-		describe( "AbstractUploader Suite", function(){
-			xit( "should handle normal file uploads", function(){
-			} );
+    function run(){
+        describe( "AbstractUploader Suite", function(){
+            xit( "should handle normal file uploads", function(){
+            } );
 
-			xit( "should handle file chunk upload", function(){
-			} );
+            xit( "should handle file chunk upload", function(){
+            } );
 
-			xit( "should merge file chunks", function(){
-				// Create a few test chunks and see if they get merged together
-			} );
-		} );
-	}
+            xit( "should merge file chunks", function(){
+                // Create a few test chunks and see if they get merged together
+            } );
+        } );
+    }
 
 }
