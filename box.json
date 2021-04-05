@@ -39,6 +39,7 @@
     "ignore":[
         "**/.*",
         "test",
-        "tests"
+        "tests",
+        "cookie.png"
     ]
 }
