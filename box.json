@@ -26,7 +26,15 @@
     "scripts":{
         "postVersion":"package set location='michaelborn/UpChunk#v`package version`'",
         "onRelease":"publish",
-        "postPublish":"!git push && git push --tags"
+        "postPublish":"!git push && git push --tags",
+        "format":"cfformat run --overwrite models,tests/specs",
+        "format:watch":"cfformat watch --overwrite models,tests/specs ./.cfformat.json",
+        "format:check":"cfformat check --overwrite models,tests/specs",
+        "generateAPIDocs":"touch .tmp && rm .tmp --recurse --force && docbox generate mapping=UpChunk excludes=tests|coldbox|testbox strategy-outputDir=.tmp/apidocs strategy-projectTitle=UpChunk",
+        "commitAPIDocs":"run-script generateAPIDocs && !git add docs/apidocs/* && !git commit -m 'Updated API Docs'"
+    },
+    "testbox":{
+        "runner":"http://localhost:8011/index.cfm"
     },
     "ignore":[
         "**/.*",
