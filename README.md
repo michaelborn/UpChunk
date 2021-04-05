@@ -1,6 +1,12 @@
 # UpChunk
 
-[![Master Branch Build Status](https://img.shields.io/travis/michaelborn/UpChunk/master.svg?style=flat-square&label=master)](https://travis-ci.org/michaelborn/UpChunk)
+[![All Contributors](https://img.shields.io/github/contributors/michaelborn/UpChunk?style=flat-square)](https://github.com/michaelborn/DocBox/graphs/contributors)
+|
+[![Master Branch Build Status](https://img.shields.io/travis/michaelborn/UpChunk/master.svg?style=flat-square&label=master)](https://travis-ci.org/michaelborn/UpChunk) 
+| 
+[![Development Branch Build Status](https://img.shields.io/travis/michaelborn/UpChunk/development.svg?style=flat-square&label=development)](https://travis-ci.org/michaelborn/UpChunk)
+|
+![Latest release](https://img.shields.io/github/v/release/michaelborn/UpChunk?style=flat-square)
 
 ## Getting Started
 
