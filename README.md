@@ -62,7 +62,7 @@ component extends="UpChunk.models.AbstractUploader" {
 Then add a `parseUpload()` method which takes in the RequestContext object and returns a struct of info about the current upload:
 
 ```js
-/**
+   /**
      * Inspect the current coldbox event
      * and return info about the current upload (if it is an upload.)
      */
@@ -88,7 +88,7 @@ This will vary depending on the parameters passed in the request. DropZone prepe
 
 For more complex scenarios, you may find it necessary to overwrite the parent `handleUpload()`, `handleNormalUpload()` or `handleChunkedUpload()` methods defined in `AbstractUploader.cfc`:
 
-```
+```js
 /**
  * FunkyUploader
  * Handle abnormal Funky uploads
