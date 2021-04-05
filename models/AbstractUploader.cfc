@@ -7,6 +7,7 @@
  */
 component implements="UpChunk.models.IChunk" accessors="true" singleton{
     property name="settings" inject="coldbox:moduleSettings:UpChunk";
+    property name="interceptorService" inject="coldbox:interceptorService";
 
     /**
      * For logging purposes, note the upload vendor name.
@@ -30,18 +31,26 @@ component implements="UpChunk.models.IChunk" accessors="true" singleton{
      * @event ColdBox RequestContext - used for grabbing request parameters and headers.
      */
     function handleUpload( required struct event ){
-        controller.getInterceptorService().announce( "UpChunk_preUpload" );
+        interceptorService.announce( "UpChunk_preUpload" );
 
         // get chunk info
         var upload = parseUpload( event = event );
 
         if ( upload.isChunked ) {
             handleChunkedUpload( upload );
+            if ( upload.isFinalChunk ){
+                // don't try to process a "file upload" when it's only a chunk upload!
+                event.renderData(
+                    type = "JSON",
+                    data = { "error" : false, "messages" : [] },
+                    statusCode = 206
+                ).noExecution();
+            }
         } else {
             handleNormalUpload( upload );
         }
 
-        controller.getInterceptorService().announce( "UpChunk_postUpload" );
+        interceptorService.announce( "UpChunk_postUpload" );
     }
 
     /**
@@ -70,17 +79,10 @@ component implements="UpChunk.models.IChunk" accessors="true" singleton{
         if ( !directoryExists( chunkDir ) ){
             directoryCreate( chunkDir );
         }
-        fileMove( rc.fileUpload, "#chunkDir##upload.index#" );
+        fileMove( upload.filename, "#chunkDir##upload.index#" );
 
         if ( upload.isFinalChunk ){
             var finalFile = mergeChunks( upload ).file;
-        } else {
-            // don't try to process a "file upload" when it's only a chunk upload!
-            event.renderData(
-                type = "JSON",
-                data = { "error" : false, "messages" : [] },
-                statusCode = 206
-            ).noExecution();
         }
     }
 

@@ -7,7 +7,7 @@ interface{
     /**
      * Process a non-chunked file upload
      */
-    function handleUpload( required struct upload );
+    function handleUpload( required struct event );
 
     /**
      * Process a file upload chunked
@@ -15,8 +15,11 @@ interface{
     function handleChunkedUpload( required struct upload );
 
     /**
-     * Collate all chunks for the current chunked upload into a single file
-     * and move to location defined in module settings.
+     * Handle final merging of all upload chunks into a single file
+     * Executed only on upload of last file chunk.
+     *
+     * @upload 
+     * @returns String - returns path to completed file
      */
-    public void function mergeChunks( required struct upload );
+    public string function mergeChunks( required struct upload );
 }

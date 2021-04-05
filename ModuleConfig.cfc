@@ -25,6 +25,14 @@ component {
             strategy : "DropZone@UpChunk"
 
         };
+
+        interceptorSettings = {
+            customInterceptionPoints = "UpChunk_preUpload,UpChunk_postUpload"
+        };
+
+        binder.map( "DropZone@UpChunk" )
+                .to( "UpChunk.models.vendors.DropZone" )
+                .asSingleton();
     }
 
     function onLoad(){

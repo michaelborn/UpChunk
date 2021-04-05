@@ -1,7 +1,7 @@
 /**
  * Handles file uploads (chunked and non-chunked) from DropZone
  */
-component extends="UpChunk.AbstractUploader"{
+component extends="UpChunk.models.AbstractUploader"{
 
     /**
      * Inspect the current coldbox event
@@ -12,13 +12,13 @@ component extends="UpChunk.AbstractUploader"{
             // is the current request a chunked upload?
             isChunked : arguments.event.getValue( "dzchunkindex", "" ) != "",
             // what is the upload filename?
-            filename : event.getValue( "filename" ),
+            filename : event.getValue( "file" ),
             // An id unique to each chunked file upload session for tracking and organized groups of chunks.
-            uuid : event.getValue( "dzuuid" ),
+            uuid : event.getValue( "dzuuid", "" ),
             // what chunk index is this current request?
             index : arguments.event.getValue( "dzchunkindex", -1 ),
             // is this the last chunk in the upload
-            isFinalChunk : arguments.event.getValue( "dztotalchunkcount", 0 ) == ( arguments.event.getValue( "dzchunkindex", -1 ) + 1 );
+            isFinalChunk : arguments.event.getValue( "dztotalchunkcount", 0 ) == ( arguments.event.getValue( "dzchunkindex", -1 ) + 1 )
         };
     }
 }
