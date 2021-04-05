@@ -1,0 +1,11 @@
+{
+    "app":{
+        "cfengine":"lucee@5.3.7+48"
+    },
+    "web":{
+        "directoryBrowsing":"false",
+        "HTTP":{
+            "port":"8011"
+        }
+    }
+}
