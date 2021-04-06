@@ -1,7 +1,7 @@
 /**
  * Handles file uploads (chunked and non-chunked) from DropZone
  */
-component extends="UpChunk.models.AbstractUploader" {
+component extends="UpChunk.models.AbstractUploader"{
 
     /**
      * Inspect the current coldbox event

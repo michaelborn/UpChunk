@@ -40,5 +40,8 @@ component {
         if ( right( settings.tempDir, 1) != fileSeparator ){
             settings.tempDir &= fileSeparator;
         }
+        if ( right( settings.uploadDir, 1) != fileSeparator ){
+            settings.uploadDir &= fileSeparator;
+        }
     }
 }

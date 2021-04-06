@@ -13,6 +13,7 @@ component
 
     property name="settings"           inject="coldbox:moduleSettings:UpChunk";
     property name="interceptorService" inject="coldbox:interceptorService";
+    property name="log"                inject="logbox:logger:{this}";
 
     /**
      * For logging purposes, note the upload vendor name.
@@ -40,6 +41,9 @@ component
 
         // get chunk info
         var upload = parseUpload( event = event );
+        if ( log.canDebug() ){
+            log.debug( "Parsed upload:", upload );
+        }
 
         if ( upload.isChunked ) {
             handleChunkedUpload( upload );
@@ -80,13 +84,13 @@ component
      * 7. run success interception point
      */
     function handleChunkedUpload( required struct upload ){
-        var chunkDir = "#settings.tempDir##upload.uuid##getFileSeparator()#";
-        if ( !directoryExists( chunkDir ) ) {
-            directoryCreate( chunkDir );
+        upload.chunkDir = "#settings.tempDir##upload.uuid##getFileSeparator()#";
+        if ( !directoryExists( upload.chunkDir ) ) {
+            directoryCreate( upload.chunkDir );
         }
         fileMove(
             upload.filename,
-            "#chunkDir##upload.index#"
+            "#upload.chunkDir##upload.index#"
         );
 
         if ( upload.isFinalChunk ) {
@@ -105,24 +109,40 @@ component
         var extension = listLast( upload.filename, "." );
 
         // get final location from settings... preferably a cbfs location.
-        var finalFile = expandPath( "#variables.tmpDir##getFileSeparator()##createUUID()#.#extension#" );
+        if ( !directoryExists( settings.uploadDir ) ){
+            directoryCreate( settings.uploadDir, true, true );
+        }
+        var finalFile = "#settings.uploadDir##upload.uuid#.#extension#";
         var allChunks = directoryList(
-            path     = chunkDir,
+            path     = upload.chunkDir,
             recurse  = false,
-            listInfo = "name",
+            listInfo = "query",
             type     = "file",
             sort     = "name asc"
         );
-
-        var fileObject = fileOpen( finalFile, "write" );
-        for ( var chunkfile in allChunks ) {
-            fileAppend(
-                fileObject,
-                fileReadBinary( "#chunkDir##getFileSeparator()##chunkfile#" )
-            );
+        if ( log.canDebug() ){
+            log.debug( "Merging #allChunks.recordCount# upload chunks found in #upload.chunkDir#" );
         }
-        fileClose( fileObject );
-        directoryDelete( chunkDir, true );
+
+        for ( var chunk in allChunks ) {
+            var chunkFile = "#upload.chunkDir##chunk.name#";
+            if ( log.canDebug() ){
+                log.debug( "Moving chunk #chunkfile# to #finalFile#, file exists: #fileExists( chunkFile )#",  );
+            }
+            if ( !fileExists( chunkFile ) ){
+                fileWrite(
+                    finalFile,
+                    fileReadBinary( chunkFile )
+                );
+            } else {
+                // For ACF compat, this may need to be a file Object.
+                fileAppend(
+                    finalFile,
+                    fileReadBinary( chunkFile )
+                );
+            }
+        }
+        directoryDelete( upload.chunkDir, true );
 
         return finalFile;
     }
