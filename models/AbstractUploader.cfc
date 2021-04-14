@@ -16,12 +16,6 @@ component
     property name="log"                inject="logbox:logger:{this}";
 
     /**
-     * For logging purposes, note the upload vendor name.
-     * i.e. "FineUploader" or "Dropzone"
-     */
-    property name="name" type="string";
-
-    /**
      * OS-safe file separator
      */
     property name="fileSeparator" type="string";
@@ -36,40 +30,55 @@ component
      *
      * @event ColdBox RequestContext - used for grabbing request parameters and headers.
      */
-    function handleUpload( required struct event ){
-        interceptorService.announce( "UpChunk_preUpload" );
+    public struct function handleUpload( required struct event ){
 
         // get chunk info
-        var upload = parseUpload( event = event );
+        var upload = parseUpload( event = arguments.event );
         if ( log.canDebug() ){
             log.debug( "Parsed upload:", upload );
         }
+        interceptorService.announce( "UpChunk_preUpload", upload );
 
         if ( upload.isChunked ) {
-            handleChunkedUpload( upload );
-            if ( upload.isFinalChunk ) {
-                // don't try to process a "file upload" when it's only a chunk upload!
-                event
-                    .renderData(
-                        type       = "JSON",
-                        data       = { "error" : false, "messages" : [] },
-                        statusCode = 206
-                    )
-                    .noExecution();
-            }
+            var uploadedFile = handleChunkedUpload( upload );
         } else {
-            handleNormalUpload( upload );
+            var uploadedFile = handleNormalUpload( upload );
         }
 
-        interceptorService.announce( "UpChunk_postUpload" );
+        /**
+         * The inability to introspect a file upload
+         * means that the original filename needs to be passed
+         * via frontend user scripts.
+         * 
+         * Here is where that filename is utilized to correct the file extension
+         * and set the final filename.
+         */
+        if ( listLast( uploadedFile, "." ) == "upload" ){
+            var fileExtension = listLast( upload.original, "." );
+            var finalFile = replace( uploadedFile, ".upload", ".#fileExtension#" );
+            fileMove( uploadedFile, finalFile );
+        } else {
+            var finalFile = uploadedFile;
+        }
+
+        interceptorService.announce( "UpChunk_postUpload", upload );
+
+        return {
+            error : false,
+            partial : upload.isChunked && !upload.isFinalChunk,
+            finalFile : finalFile
+        };
     }
 
     /**
      * Handle a non-chunked file upload.
      *
-     * @upload
+     * @upload {Struct} parameters for upload, parsed from event and defined in vendor parseUpload() method
      */
-    function handleNormalUpload( required struct upload ){
+    public string function handleNormalUpload( required struct upload ){
+        fileMove( arguments.upload.file, settings.uploadDir );
+        var filename = ListLast( arguments.upload.file, getFileSeparator() );
+        return "#settings.uploadDir##filename#";
     }
 
     /**
@@ -82,19 +91,24 @@ component
      * 5. upload/save final chunk to local and merge all chunks together
      * 6. move finished file to final location determined by module settings
      * 7. run success interception point
+     * 
+     * @upload {Struct} parameters for upload, parsed from event and defined in vendor parseUpload() method
      */
-    function handleChunkedUpload( required struct upload ){
-        upload.chunkDir = "#settings.tempDir##upload.uuid##getFileSeparator()#";
-        if ( !directoryExists( upload.chunkDir ) ) {
-            directoryCreate( upload.chunkDir );
+    public string function handleChunkedUpload( required struct upload ){
+        arguments.upload.chunkDir = "#settings.tempDir##arguments.upload.uuid##getFileSeparator()#";
+        if ( !directoryExists( arguments.upload.chunkDir ) ) {
+            directoryCreate( arguments.upload.chunkDir );
         }
+        var chunkFile = "#arguments.upload.chunkDir##arguments.upload.index#";
         fileMove(
-            upload.filename,
-            "#upload.chunkDir##upload.index#"
+            arguments.upload.file,
+            chunkFile
         );
 
-        if ( upload.isFinalChunk ) {
-            var finalFile = mergeChunks( upload ).file;
+        if ( arguments.upload.isFinalChunk ) {
+            return mergeChunks( arguments.upload );
+        } else {
+            return chunkFile;
         }
     }
 
@@ -106,28 +120,28 @@ component
      * @returns String - returns path to completed file
      */
     public string function mergeChunks( required struct upload ){
-        var extension = listLast( upload.filename, "." );
+        var extension = listLast( arguments.upload.file, "." );
 
         // get final location from settings... preferably a cbfs location.
         if ( !directoryExists( settings.uploadDir ) ){
-            directoryCreate( settings.uploadDir, true, true );
+            directoryCreate( settings.uploadDir );
         }
-        var finalFile = "#settings.uploadDir##upload.uuid#.#extension#";
+        var finalFile = "#settings.uploadDir##arguments.upload.uuid#.#extension#";
         var allChunks = directoryList(
-            path     = upload.chunkDir,
+            path     = arguments.upload.chunkDir,
             recurse  = false,
             listInfo = "query",
             type     = "file",
             sort     = "name asc"
         );
         if ( log.canDebug() ){
-            log.debug( "Merging #allChunks.recordCount# upload chunks found in #upload.chunkDir#" );
+            log.debug( "Merging #allChunks.recordCount# upload chunks found in #arguments.upload.chunkDir#" );
         }
 
         for ( var chunk in allChunks ) {
-            var chunkFile = "#upload.chunkDir##chunk.name#";
+            var chunkFile = "#arguments.upload.chunkDir##chunk.name#";
             if ( log.canDebug() ){
-                log.debug( "Moving chunk #chunkfile# to #finalFile#, file exists: #fileExists( chunkFile )#",  );
+                log.debug( "Moving chunk #chunkfile# to #finalFile#, file exists: #fileExists( chunkFile )#" );
             }
             if ( !fileExists( chunkFile ) ){
                 fileWrite(
@@ -142,7 +156,7 @@ component
                 );
             }
         }
-        directoryDelete( upload.chunkDir, true );
+        directoryDelete( arguments.upload.chunkDir, true );
 
         return finalFile;
     }

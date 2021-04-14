@@ -107,3 +107,9 @@ component extends="UpChunk.models.AbstractUploader" {
    }
 }
 ```
+
+## Limitations
+
+Lucee doesn't broadcast the filename very well. :/ 
+
+See [this SO post](coldfusion get body filename), but basically you can avoid this by sending a `filename` parameter in the upload request.

@@ -6,19 +6,22 @@ interface {
 
     /**
      * Process a non-chunked file upload
+     * Runs vendor `parseUpload()` event to retrieve upload parameters
+     * Calls {@see handleChunkedUpload} or {@see handleNormalUpload}, depending on upload.isChunked
      */
-    function handleUpload( required struct event );
+    public struct function handleUpload( required struct event );
 
     /**
      * Process a file upload chunked
+     * @upload {Struct} parameters for upload, parsed from event and defined in vendor parseUpload() method
      */
-    function handleChunkedUpload( required struct upload );
+    public string function handleChunkedUpload( required struct upload );
 
     /**
      * Handle final merging of all upload chunks into a single file
      * Executed only on upload of last file chunk.
      *
-     * @upload
+     * @upload {Struct} parameters for upload, parsed from event and defined in vendor parseUpload() method
      * @returns String - returns path to completed file
      */
     public string function mergeChunks( required struct upload );
