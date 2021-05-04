@@ -31,10 +31,9 @@ component
      * @event ColdBox RequestContext - used for grabbing request parameters and headers.
      */
     public struct function handleUpload( required struct event ){
-
         // get chunk info
         var upload = parseUpload( event = arguments.event );
-        if ( log.canDebug() ){
+        if ( log.canDebug() ) {
             log.debug( "Parsed upload:", upload );
         }
         interceptorService.announce( "UpChunk_preUpload", upload );
@@ -49,13 +48,17 @@ component
          * The inability to introspect a file upload
          * means that the original filename needs to be passed
          * via frontend user scripts.
-         * 
+         *
          * Here is where that filename is utilized to correct the file extension
          * and set the final filename.
          */
-        if ( listLast( uploadedFile, "." ) == "upload" ){
+        if ( listLast( uploadedFile, "." ) == "upload" ) {
             var fileExtension = listLast( upload.original, "." );
-            var finalFile = replace( uploadedFile, ".upload", ".#fileExtension#" );
+            var finalFile     = replace(
+                uploadedFile,
+                ".upload",
+                ".#fileExtension#"
+            );
             fileMove( uploadedFile, finalFile );
         } else {
             var finalFile = uploadedFile;
@@ -64,8 +67,8 @@ component
         interceptorService.announce( "UpChunk_postUpload", upload );
 
         return {
-            error : false,
-            partial : upload.isChunked && !upload.isFinalChunk,
+            error     : false,
+            partial   : upload.isChunked && !upload.isFinalChunk,
             finalFile : finalFile
         };
     }
@@ -76,8 +79,14 @@ component
      * @upload {Struct} parameters for upload, parsed from event and defined in vendor parseUpload() method
      */
     public string function handleNormalUpload( required struct upload ){
-        fileMove( arguments.upload.file, settings.uploadDir );
-        var filename = ListLast( arguments.upload.file, getFileSeparator() );
+        fileMove(
+            arguments.upload.file,
+            settings.uploadDir
+        );
+        var filename = listLast(
+            arguments.upload.file,
+            getFileSeparator()
+        );
         return "#settings.uploadDir##filename#";
     }
 
@@ -91,7 +100,7 @@ component
      * 5. upload/save final chunk to local and merge all chunks together
      * 6. move finished file to final location determined by module settings
      * 7. run success interception point
-     * 
+     *
      * @upload {Struct} parameters for upload, parsed from event and defined in vendor parseUpload() method
      */
     public string function handleChunkedUpload( required struct upload ){
@@ -100,10 +109,7 @@ component
             directoryCreate( arguments.upload.chunkDir );
         }
         var chunkFile = "#arguments.upload.chunkDir##arguments.upload.index#";
-        fileMove(
-            arguments.upload.file,
-            chunkFile
-        );
+        fileMove( arguments.upload.file, chunkFile );
 
         if ( arguments.upload.isFinalChunk ) {
             return mergeChunks( arguments.upload );
@@ -123,7 +129,7 @@ component
         var extension = listLast( arguments.upload.file, "." );
 
         // get final location from settings... preferably a cbfs location.
-        if ( !directoryExists( settings.uploadDir ) ){
+        if ( !directoryExists( settings.uploadDir ) ) {
             directoryCreate( settings.uploadDir );
         }
         var finalFile = "#settings.uploadDir##arguments.upload.uuid#.#extension#";
@@ -141,7 +147,7 @@ component
         //     );
         // }
 
-        if ( log.canDebug() ){
+        if ( log.canDebug() ) {
             log.debug( "Merging #arrayLen( allChunks )# upload chunks found in #arguments.upload.chunkDir#" );
         }
 
@@ -149,24 +155,26 @@ component
          * chunk order is EXTREMELY important.
          * If a single chunk is appended to the final file out of order, the file will be corrupted.
          */
-        allChunks.sort( "numeric", "asc" ).each( function( filename ){
-            var chunkFile = "#upload.chunkDir##filename#";
-            if ( log.canDebug() ){
-                log.debug( "Moving chunk #chunkfile# to #finalFile#, file exists: #fileExists( chunkFile )#" );
-            }
-            if ( !fileExists( chunkFile ) ){
-                fileWrite(
-                    finalFile,
-                    fileReadBinary( chunkFile )
-                );
-            } else {
-                // For ACF compat, this may need to be a file Object.
-                fileAppend(
-                    finalFile,
-                    fileReadBinary( chunkFile )
-                );
-            }
-        });
+        allChunks
+            .sort( "numeric", "asc" )
+            .each( function( filename ){
+                var chunkFile = "#upload.chunkDir##filename#";
+                if ( log.canDebug() ) {
+                    log.debug( "Moving chunk #chunkfile# to #finalFile#, file exists: #fileExists( chunkFile )#" );
+                }
+                if ( !fileExists( chunkFile ) ) {
+                    fileWrite(
+                        finalFile,
+                        fileReadBinary( chunkFile )
+                    );
+                } else {
+                    // For ACF compat, this may need to be a file Object.
+                    fileAppend(
+                        finalFile,
+                        fileReadBinary( chunkFile )
+                    );
+                }
+            } );
         directoryDelete( arguments.upload.chunkDir, true );
 
         return finalFile;
