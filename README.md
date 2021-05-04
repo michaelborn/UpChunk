@@ -89,7 +89,11 @@ Then add a `parseUpload()` method which takes in the RequestContext object and r
 
 This will vary depending on the parameters passed in the request. DropZone prepends all chunking parameters with `dz`, for instance.
 
-For more complex scenarios, you may find it necessary to overwrite the parent `handleUpload()`, `handleNormalUpload()` or `handleChunkedUpload()` methods defined in `AbstractUploader.cfc`:
+### Extending UpChunk
+
+For more complex scenarios, you may find it necessary to extend UpChunk.
+
+You can do this by overwriting any or all of the UpChunk methods `handleUpload()`, `handleNormalUpload()` or `handleChunkedUpload()` defined in `AbstractUploader.cfc`:
 
 ```js
 /**

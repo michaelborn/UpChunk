@@ -130,16 +130,27 @@ component
         var allChunks = directoryList(
             path     = arguments.upload.chunkDir,
             recurse  = false,
-            listInfo = "query",
-            type     = "file",
-            sort     = "name asc"
+            listInfo = "name",
+            type     = "file"
         );
+        // if ( arrayLen( allChunks ) != rc.dztotalchunkcount ){
+        //     throw(
+        //         message = "Invalid upload; cannot continue. The number of uploaded chunks does not match the supposed chunk count.",
+        //         type = "MissingChunkException",
+        //         detail = serializeJSON( { "chunksOnDisk" : arrayLen( allChunks ), "total chunk count": rc.dztotalchunkcount } )
+        //     );
+        // }
+
         if ( log.canDebug() ){
-            log.debug( "Merging #allChunks.recordCount# upload chunks found in #arguments.upload.chunkDir#" );
+            log.debug( "Merging #arrayLen( allChunks )# upload chunks found in #arguments.upload.chunkDir#" );
         }
 
-        for ( var chunk in allChunks ) {
-            var chunkFile = "#arguments.upload.chunkDir##chunk.name#";
+        /**
+         * chunk order is EXTREMELY important.
+         * If a single chunk is appended to the final file out of order, the file will be corrupted.
+         */
+        allChunks.sort( "numeric", "asc" ).each( function( filename ){
+            var chunkFile = "#upload.chunkDir##filename#";
             if ( log.canDebug() ){
                 log.debug( "Moving chunk #chunkfile# to #finalFile#, file exists: #fileExists( chunkFile )#" );
             }
@@ -155,7 +166,7 @@ component
                     fileReadBinary( chunkFile )
                 );
             }
-        }
+        });
         directoryDelete( arguments.upload.chunkDir, true );
 
         return finalFile;
