@@ -92,21 +92,23 @@
 		};
 
 		//Register interceptors as an array, we need order
-		interceptors = [
-			//SES
-			{class="coldbox.system.interceptors.SES",
-			 properties={}
-			}
-		];
+		interceptors = [];
 
-		/*
 		// module setting overrides
 		moduleSettings = {
-			moduleName = {
-				settingName = "overrideValue"
+			upChunk = {
+				/**
+				 * Temporary directory used for storing file chunks during upload.
+				 */
+				tempDir : expandPath( "/resources/files/tmp" ),
+
+				/**
+				 * Set the final resting place of uploaded files.
+				 */
+				uploadDir : expandPath( "/resources/files/uploads" )
 			}
 		};
-
+/*
 		// flash scope configuration
 		flash = {
 			scope = "session,client,cluster,ColdboxCache,or full path",

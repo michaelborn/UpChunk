@@ -1,0 +1,3 @@
+# We want to track the stored test resource files, but ignore all uploaded copies
+uploads/*
+tmp/*

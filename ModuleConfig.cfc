@@ -14,16 +14,7 @@ component {
             /**
              * Set the final resting place of uploaded files.
              */
-            uploadDir : "resources/assets/uploads/",
-
-            /**
-             * Wirebox ID that points to the vendor CFC to use for uploads.
-             * 
-             * You can write and use your own custom upload vendor...
-             * ...but it must implement UpChunk.models.iChunk and extend UpChunk.models.AbstractUploader.
-             */
-            strategy : "DropZone@UpChunk"
-
+            uploadDir : "/resources/assets/uploads/"
         };
 
         interceptorSettings = {

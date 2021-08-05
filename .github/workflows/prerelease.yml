@@ -13,7 +13,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        cfengine: ["lucee@5", "adobe@2016", "adobe@2018"]
+        cfengine: ["lucee@5", "adobe@2018"]
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
@@ -23,10 +23,12 @@ jobs:
       
       - name: Install dependencies
         run: box install
-      
+
       - name: Start server
         run: |
+          cd tests
           box set cfconfig_robustExceptionEnabled=true
-          box server start cfengine=${{ matrix.cfengine }} serverConfigFile=server-${{ matrix.cfengine }}.json --noSaveSettings
+          box server start cfengine=${{ matrix.cfengine }} --noSaveSettings
+
       - name: Run TestBox Tests
-        run: box testbox run
+        run: box testbox run runner=http://localhost:8011/index.cfm

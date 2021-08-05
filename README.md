@@ -1,14 +1,10 @@
 # UpChunk
 
-![Cookie chunks](/cookie.png)
+![Cookie chunks](https://raw.githubusercontent.com/michaelborn/UpChunk/master/cookie.png)
 
-[![All Contributors](https://img.shields.io/github/contributors/michaelborn/UpChunk?style=flat-square)](https://github.com/michaelborn/DocBox/graphs/contributors)
+[![All Contributors](https://img.shields.io/github/contributors/michaelborn/UpChunk?style=flat-square)](https://github.com/michaelborn/upchunk/graphs/contributors)
 |
-[![Master Branch Build Status](https://img.shields.io/travis/michaelborn/UpChunk/master.svg?style=flat-square&label=master)](https://travis-ci.org/michaelborn/UpChunk) 
-| 
-[![Development Branch Build Status](https://img.shields.io/travis/michaelborn/UpChunk/development.svg?style=flat-square&label=development)](https://travis-ci.org/michaelborn/UpChunk)
-|
-![Latest release](https://img.shields.io/github/v/release/michaelborn/UpChunk?style=flat-square)
+![Release](https://github.com/michaelborn/upchunk/actions/workflows/release/badge.svg)
 </center>
 
 ## Features
@@ -134,4 +130,4 @@ Copyright 2021 (and on) - [Michael Born](https://michaelborn.me/)
 
 * [Homepage](https://github.com/michaelborn/UpChunk)
 * [Issue Tracker](https://github.com/michaelborn/UpChunk/issues)
-* [New BSD License](https://github.com/michaelborn/UpChunk/blob/master/LICENSE.txt)
+* [New BSD License](https://github.com/michaelborn/UpChunk/blob/master/LICENSE)

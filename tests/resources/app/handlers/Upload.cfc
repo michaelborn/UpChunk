@@ -1,7 +1,7 @@
 /**
  * I handle UpChunk test uploads
  */
-component extends="coldbox.system.EventHandler" {
+component extends="Main" {
 
     private function upload( event, rc, prc ){
         if ( event.getValue( "file", "" ) == "" ){
@@ -20,13 +20,13 @@ component extends="coldbox.system.EventHandler" {
 				type = "JSON",
 				data = { "error" : false, "messages" : [] },
 				statusCode = 206
-			).noExecution();
+			);
 		} else {
 			event.renderData(
 				type = "JSON",
 				data = { "error" : false, "finalFile" : results.finalFile },
 				statusCode = 200
-			).noExecution();
+			);
 		}
     }
 

@@ -9,10 +9,19 @@ component {
     testsPath = getDirectoryFromPath( getCurrentTemplatePath() );
     this.mappings[ "/tests" ] = testsPath;
     rootPath = REReplaceNoCase( this.mappings[ "/tests" ], "tests(\\|/)", "" );
+
     this.mappings[ "/root" ] = rootPath;
     this.mappings[ "/UpChunk" ] = rootPath;
     this.mappings[ "/testingModuleRoot" ] = listDeleteAt( rootPath, listLen( rootPath, '\/' ), "\/" );
     this.mappings[ "/app" ] = testsPath & "resources/app";
     this.mappings[ "/coldbox" ] = testsPath & "resources/app/coldbox";
     this.mappings[ "/testbox" ] = rootPath & "/testbox";
+
+	public void function onRequestEnd() {
+		if( !isNull( application.cbController ) ){
+			application.cbController.getLoaderService().processShutdown();
+		}
+		structDelete( application, "cbController" );
+		structDelete( application, "wirebox" );
+	}
 }
