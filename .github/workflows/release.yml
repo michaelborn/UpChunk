@@ -35,9 +35,9 @@ jobs:
 
       - name: Start server
         run: |
-        cd tests
-        box set cfconfig_robustExceptionEnabled=true
-        box server start cfengine=${{ matrix.cfengine }} --noSaveSettings
+          cd tests
+          box set cfconfig_robustExceptionEnabled=true
+          box server start cfengine=${{ matrix.cfengine }} --noSaveSettings
 
       - name: Run TestBox Tests
         run: box testbox run runner=http://localhost:8011/index.cfm
