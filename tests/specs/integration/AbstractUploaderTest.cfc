@@ -20,7 +20,7 @@ component extends="tests.resources.ModuleIntegrationSpec" appMapping="/app" {
                     );
                 }
                 directoryCreate( variables.moduleSettings.uploadDir );
-                var original = "/tests/resources/files/unsplash-cookie.jpg";
+                var original = expandPath( "/tests/resources/files/unsplash-cookie.jpg" );
 
                 /**
                  * We create a dummy copy because the upload will move the upload tmp file into its final location.
@@ -31,7 +31,7 @@ component extends="tests.resources.ModuleIntegrationSpec" appMapping="/app" {
                 }
             } );
             it( "can upload a non-chunked file", function(){
-                var event = request(
+                var event = post(
                     route  = "/upload/dropzone",
                     method = "POST",
                     params = { "file" : variables.uploadTestFile }
@@ -40,7 +40,7 @@ component extends="tests.resources.ModuleIntegrationSpec" appMapping="/app" {
             } );
 
             it( "matches the original file extension", function(){
-                var originalFile = "/tests/resources/files/chunktest.txt";
+                var originalFile = expandPath( "/tests/resources/files/chunktest.txt" );
 
                 // chunk parameters
                 var totalChunkCount = 0;
@@ -48,7 +48,7 @@ component extends="tests.resources.ModuleIntegrationSpec" appMapping="/app" {
                 var chunks          = [];
 
                 readFileIntoChunks(
-                    expandPath( originalFile ),
+                    originalFile,
                     100000,
                     function( chunk, size, index ){
                         var chunkFile = getDirectoryFromPath( originalFile ) & "chunktest.#index#.part";
@@ -66,7 +66,7 @@ component extends="tests.resources.ModuleIntegrationSpec" appMapping="/app" {
                 var result = {};
                 chunks.each( function( chunk ){
                     chunk[ "dztotalchunkcount" ] = totalChunkCount;
-                    var event                    = request(
+                    var event = post(
                         route  = "/upload/dropzone",
                         method = "GET",
                         params = chunk
@@ -86,7 +86,7 @@ component extends="tests.resources.ModuleIntegrationSpec" appMapping="/app" {
             } );
 
             it( "can upload .txt file chunks in order", function(){
-                var originalFile = "/tests/resources/files/chunktest.txt";
+                var originalFile = expandPath( "/tests/resources/files/chunktest.txt" );
 
                 // chunk parameters
                 var totalChunkCount = 0;
@@ -94,7 +94,7 @@ component extends="tests.resources.ModuleIntegrationSpec" appMapping="/app" {
                 var chunks          = [];
 
                 readFileIntoChunks(
-                    expandPath( originalFile ),
+                    originalFile,
                     100000,
                     function( chunk, size, index ){
                         var chunkFile = getDirectoryFromPath( originalFile ) & "chunktest.#index#.part";
@@ -112,7 +112,7 @@ component extends="tests.resources.ModuleIntegrationSpec" appMapping="/app" {
                 var result = {};
                 chunks.each( function( chunk ){
                     chunk[ "dztotalchunkcount" ] = totalChunkCount;
-                    var event                    = request(
+                    var event = post(
                         route  = "/upload/dropzone",
                         method = "GET",
                         params = chunk
@@ -132,7 +132,7 @@ component extends="tests.resources.ModuleIntegrationSpec" appMapping="/app" {
             } );
 
             it( "can upload a larger chunked .jpg", function(){
-                var originalFile = "/tests/resources/files/cookie-large.jpg";
+                var originalFile = expandPath( "/tests/resources/files/cookie-large.jpg" );
 
                 // chunk parameters
                 var totalChunkCount = 0;
@@ -140,7 +140,7 @@ component extends="tests.resources.ModuleIntegrationSpec" appMapping="/app" {
                 var chunks          = [];
 
                 readFileIntoChunks(
-                    expandPath( originalFile ),
+                    originalFile,
                     100000,
                     function( chunk, size, index ){
                         var chunkFile = getDirectoryFromPath( originalFile ) & "chunktest.#index#.part";
@@ -160,7 +160,7 @@ component extends="tests.resources.ModuleIntegrationSpec" appMapping="/app" {
                 var result = {};
                 chunks.each( function( chunk ){
                     chunk[ "dztotalchunkcount" ] = totalChunkCount;
-                    var event                    = request(
+                    var event = post(
                         route  = "/upload/dropzone",
                         method = "GET",
                         params = chunk
@@ -179,6 +179,7 @@ component extends="tests.resources.ModuleIntegrationSpec" appMapping="/app" {
             } );
             it( "can run integration specs with the module activated", function(){
                 expect( getController().getModuleService().isModuleRegistered( "UpChunk" ) ).toBeTrue();
+
                 var event = execute(
                     event         = "Main.index",
                     renderResults = true
