@@ -126,7 +126,7 @@ component
      * @returns String - returns path to completed file
      */
     public string function mergeChunks( required struct upload ){
-        var extension = listLast( arguments.upload.file, "." );
+        var extension = listLast( arguments.upload.original, "." );
 
         // get final location from settings... preferably a cbfs location.
         if ( !directoryExists( settings.uploadDir ) ) {
