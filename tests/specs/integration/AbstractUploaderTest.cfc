@@ -5,13 +5,19 @@ component extends="tests.resources.ModuleIntegrationSpec" appMapping="/app" {
 
     function run(){
         describe( "AbstractUploader Suite", function(){
-            beforeEach(function() {
-                if ( directoryExists( variables.moduleSettings.tempDir ) ){
-                    directoryDelete( variables.moduleSettings.tempDir, true );
+            beforeEach( function(){
+                if ( directoryExists( variables.moduleSettings.tempDir ) ) {
+                    directoryDelete(
+                        variables.moduleSettings.tempDir,
+                        true
+                    );
                 }
                 directoryCreate( variables.moduleSettings.tempDir );
-                if ( directoryExists( variables.moduleSettings.uploadDir ) ){
-                    directoryDelete( variables.moduleSettings.uploadDir, true );
+                if ( directoryExists( variables.moduleSettings.uploadDir ) ) {
+                    directoryDelete(
+                        variables.moduleSettings.uploadDir,
+                        true
+                    );
                 }
                 directoryCreate( variables.moduleSettings.uploadDir );
                 var original = "/tests/resources/files/unsplash-cookie.jpg";
@@ -20,48 +26,50 @@ component extends="tests.resources.ModuleIntegrationSpec" appMapping="/app" {
                  * We create a dummy copy because the upload will move the upload tmp file into its final location.
                  */
                 variables.uploadTestFile = getDirectoryFromPath( original ) & "UPLOAD-TEST.jpg";
-                if ( !fileExists( uploadTestFile ) ){
+                if ( !fileExists( uploadTestFile ) ) {
                     fileCopy( original, uploadTestFile );
                 }
-            });
+            } );
             it( "can upload a non-chunked file", function(){
                 var event = request(
-                    route         = "/upload/dropzone",
-                    method        = "POST",
-                    params        = {
-                        "file" : variables.uploadTestFile
-                    }
+                    route  = "/upload/dropzone",
+                    method = "POST",
+                    params = { "file" : variables.uploadTestFile }
                 );
                 expect( fileExists( variables.moduleSettings.uploadDir & "UPLOAD-TEST.jpg" ) ).toBeTrue();
             } );
 
-            it( "matches the original file extension", function() {
+            it( "matches the original file extension", function(){
                 var originalFile = "/tests/resources/files/chunktest.txt";
 
                 // chunk parameters
                 var totalChunkCount = 0;
                 var uploadTrackerID = createUUID();
-                var chunks = [];
+                var chunks          = [];
 
-                readFileIntoChunks( expandPath( originalFile ), 100000, function( chunk, size, index ){
-                    var chunkFile = getDirectoryFromPath( originalFile ) & "chunktest.#index#.part";
-                    fileWrite( chunkFile, chunk );
-                    chunks.append( {
-                        "file"        : chunkFile,
-                        "dzchunkindex": index,
-                        "filename"    : "chunktest.txt",
-                        "dzuuid"      : uploadTrackerID
-                    } );
-                    totalChunkCount++;
-                } );
+                readFileIntoChunks(
+                    expandPath( originalFile ),
+                    100000,
+                    function( chunk, size, index ){
+                        var chunkFile = getDirectoryFromPath( originalFile ) & "chunktest.#index#.part";
+                        fileWrite( chunkFile, chunk );
+                        chunks.append( {
+                            "file"         : chunkFile,
+                            "dzchunkindex" : index,
+                            "filename"     : "chunktest.txt",
+                            "dzuuid"       : uploadTrackerID
+                        } );
+                        totalChunkCount++;
+                    }
+                );
 
                 var result = {};
-                chunks.each( function( chunk ) {
+                chunks.each( function( chunk ){
                     chunk[ "dztotalchunkcount" ] = totalChunkCount;
-                    var event = request(
-                        route         = "/upload/dropzone",
-                        method        = "GET",
-                        params        = chunk
+                    var event                    = request(
+                        route  = "/upload/dropzone",
+                        method = "GET",
+                        params = chunk
                     );
                     result = event.getRenderData().data;
 
@@ -71,37 +79,43 @@ component extends="tests.resources.ModuleIntegrationSpec" appMapping="/app" {
                 expect( result ).toHaveKey( "finalFile" );
 
                 expect( fileExists( result.finalFile ) );
-                expect( listLast( result.finalFile, "." ) ).toBe( listLast( originalFile, "." ), "uploaded file extension should match original" );
+                expect( listLast( result.finalFile, "." ) ).toBe(
+                    listLast( originalFile, "." ),
+                    "uploaded file extension should match original"
+                );
+            } );
 
-            });
-
-            it( "can upload .txt file chunks in order", function() {
+            it( "can upload .txt file chunks in order", function(){
                 var originalFile = "/tests/resources/files/chunktest.txt";
 
                 // chunk parameters
                 var totalChunkCount = 0;
                 var uploadTrackerID = createUUID();
-                var chunks = [];
+                var chunks          = [];
 
-                readFileIntoChunks( expandPath( originalFile ), 100000, function( chunk, size, index ){
-                    var chunkFile = getDirectoryFromPath( originalFile ) & "chunktest.#index#.part";
-                    fileWrite( chunkFile, chunk );
-                    chunks.append( {
-                        "file"        : chunkFile,
-                        "dzchunkindex": index,
-                        "filename"    : "chunktest.txt",
-                        "dzuuid"      : uploadTrackerID
-                    } );
-                    totalChunkCount++;
-                } );
+                readFileIntoChunks(
+                    expandPath( originalFile ),
+                    100000,
+                    function( chunk, size, index ){
+                        var chunkFile = getDirectoryFromPath( originalFile ) & "chunktest.#index#.part";
+                        fileWrite( chunkFile, chunk );
+                        chunks.append( {
+                            "file"         : chunkFile,
+                            "dzchunkindex" : index,
+                            "filename"     : "chunktest.txt",
+                            "dzuuid"       : uploadTrackerID
+                        } );
+                        totalChunkCount++;
+                    }
+                );
 
                 var result = {};
-                chunks.each( function( chunk ) {
+                chunks.each( function( chunk ){
                     chunk[ "dztotalchunkcount" ] = totalChunkCount;
-                    var event = request(
-                        route         = "/upload/dropzone",
-                        method        = "GET",
-                        params        = chunk
+                    var event                    = request(
+                        route  = "/upload/dropzone",
+                        method = "GET",
+                        params = chunk
                     );
                     result = event.getRenderData().data;
 
@@ -111,9 +125,11 @@ component extends="tests.resources.ModuleIntegrationSpec" appMapping="/app" {
                 expect( result ).toHaveKey( "finalFile" );
 
                 expect( fileExists( result.finalFile ) );
-                expect( fileRead( result.finalFile ) ).toBe( fileRead( originalFile ), "merged/uploaded file should match original byte for byte" );
-
-            });
+                expect( fileRead( result.finalFile ) ).toBe(
+                    fileRead( originalFile ),
+                    "merged/uploaded file should match original byte for byte"
+                );
+            } );
 
             it( "can upload a larger chunked .jpg", function(){
                 var originalFile = "/tests/resources/files/cookie-large.jpg";
@@ -121,29 +137,33 @@ component extends="tests.resources.ModuleIntegrationSpec" appMapping="/app" {
                 // chunk parameters
                 var totalChunkCount = 0;
                 var uploadTrackerID = createUUID();
-                var chunks = [];
+                var chunks          = [];
 
-                readFileIntoChunks( expandPath( originalFile ), 100000, function( chunk, size, index ){
-                    var chunkFile = getDirectoryFromPath( originalFile ) & "chunktest.#index#.part";
-                    fileWrite( chunkFile, chunk );
-                    chunks.append( {
-                        "file"        : chunkFile,
-                        "dzchunkindex": index,
-                        "filename"    : "chunked-file-upload.jpg",
-                        "dzuuid"      : uploadTrackerID
-                    } );
-                    totalChunkCount++;
-                } );
+                readFileIntoChunks(
+                    expandPath( originalFile ),
+                    100000,
+                    function( chunk, size, index ){
+                        var chunkFile = getDirectoryFromPath( originalFile ) & "chunktest.#index#.part";
+                        fileWrite( chunkFile, chunk );
+                        chunks.append( {
+                            "file"         : chunkFile,
+                            "dzchunkindex" : index,
+                            "filename"     : "chunked-file-upload.jpg",
+                            "dzuuid"       : uploadTrackerID
+                        } );
+                        totalChunkCount++;
+                    }
+                );
 
                 expect( totalChunkCount ).toBe( 20 );
 
                 var result = {};
-                chunks.each( function( chunk ) {
+                chunks.each( function( chunk ){
                     chunk[ "dztotalchunkcount" ] = totalChunkCount;
-                    var event = request(
-                        route         = "/upload/dropzone",
-                        method        = "GET",
-                        params        = chunk
+                    var event                    = request(
+                        route  = "/upload/dropzone",
+                        method = "GET",
+                        params = chunk
                     );
                     result = event.getRenderData().data;
 
@@ -156,7 +176,6 @@ component extends="tests.resources.ModuleIntegrationSpec" appMapping="/app" {
 
                 expect( fileExists( result.finalFile ) );
                 expect( fileRead( result.finalFile ) ).toBe( fileRead( originalFile ) );
-
             } );
             it( "can run integration specs with the module activated", function(){
                 expect( getController().getModuleService().isModuleRegistered( "UpChunk" ) ).toBeTrue();
@@ -172,21 +191,25 @@ component extends="tests.resources.ModuleIntegrationSpec" appMapping="/app" {
     /**
      * Read a file in XX size binary chunks.
      * Used for creating a dozen or so chunks to test the chunk upload processing.
-     * 
+     *
      * @filename full path to binary file to read in as byte stream
      * @chunkSize Make byte chunks this size or smaller (last chunk will prob. be smaller)
      * @processChunk closure to run on each chunk. Use for saving the chunks to disk. `function( binary, chunkLength, chunkIndex ){}`
-     * 
+     *
      * @cite https://javabeat.net/java-split-merge-files/
      */
-    private function readFileIntoChunks( required string filename, required chunkSize, required function processChunk ){
-        var inputFile = createObject( "java", "java.io.File").init( arguments.filename );
+    private function readFileIntoChunks(
+        required string filename,
+        required chunkSize,
+        required function processChunk
+    ){
+        var inputFile   = createObject( "java", "java.io.File" ).init( arguments.filename );
         var inputStream = createObject( "java", "java.io.FileInputStream" ).init( inputFile );
 
-        var fileSize = inputFile.length();
+        var fileSize   = inputFile.length();
         var chunkIndex = 0;
 
-        while (fileSize > 0) {
+        while ( fileSize > 0 ) {
             // var binaryChunk = createObject( "java", "lucee.runtime.op.Caster" ).binaryChunk(  );
             var binaryChunk = inputStream.readNBytes( arguments.chunkSize );
             var chunkLength = arrayLen( binaryChunk );
@@ -194,11 +217,10 @@ component extends="tests.resources.ModuleIntegrationSpec" appMapping="/app" {
             fileSize -= chunkLength;
             processChunk( binaryChunk, chunkLength, chunkIndex )
 
-            byteChunkPart = javaCast( "null", 0 );
+            byteChunkPart = javacast( "null", 0 );
             chunkIndex++;
         }
         inputStream.close();
-
     }
 
 }
