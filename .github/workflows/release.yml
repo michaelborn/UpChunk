@@ -32,10 +32,11 @@ jobs:
         run: |
           box install
           box install ${{ matrix.coldbox }} --noSave
-      
+
       - name: Start server
         run: |
         cd tests
+        box set cfconfig_robustExceptionEnabled=true
         box server start cfengine=${{ matrix.cfengine }} --noSaveSettings
 
       - name: Run TestBox Tests
