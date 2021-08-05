@@ -24,7 +24,7 @@ component extends="coldbox.system.testing.BaseModelTest" model="UpChunk.models.A
     /*********************************** BDD SUITES ***********************************/
 
     function run(){
-        describe( "AbstractUploader Suite", function(){
+        xdescribe( "AbstractUploader Suite", function(){
             xit( "should handle normal file uploads", function(){
             } );
 
