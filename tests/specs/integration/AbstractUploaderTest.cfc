@@ -216,7 +216,7 @@ component extends="tests.resources.ModuleIntegrationSpec" appMapping="/app" {
             var chunkLength = arrayLen( binaryChunk );
 
             fileSize -= chunkLength;
-            processChunk( binaryChunk, chunkLength, chunkIndex )
+            processChunk( binaryChunk, chunkLength, chunkIndex );
 
             byteChunkPart = javacast( "null", 0 );
             chunkIndex++;
