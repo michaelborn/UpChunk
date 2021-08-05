@@ -1,6 +1,6 @@
 # UpChunk
 
-![Cookie chunks](cookie.png)
+![Cookie chunks](/cookie.png)
 
 [![All Contributors](https://img.shields.io/github/contributors/michaelborn/UpChunk?style=flat-square)](https://github.com/michaelborn/DocBox/graphs/contributors)
 |
@@ -40,7 +40,7 @@ moduleSettings = {
 };
 ```
 
-3. In your ColdBox handler, inject and init your vendor of choice.
+3. In your ColdBox handler, inject and init your vendor of choice, like `DropZone@UpChunk`.
 4. Run the `handleUpload()` method, making sure to pass the current Event object:
 
 ```js
@@ -52,7 +52,7 @@ function upload( event, rc, prc ){
 }
 ```
 
-## Extending UpChunk
+## Adding an UpChunk Vendor
 
 You can write and use your own custom upload vendor, but it *must* extend `UpChunk.models.AbstractUploader` (which also implements `UpChunk.models.iChunk`.)
 
