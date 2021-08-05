@@ -17,6 +17,10 @@ component{
 	this.mappings[ "/testingModuleRoot" ] = listDeleteAt( rootPath, listLen( rootPath, '\/' ), "\/" );
 	this.mappings[ "/coldbox" ] = appPath & "coldbox";
 
+	// dir for test resource files
+	this.mappings[ "/tests" ] = replaceNoCase( this.mappings[ "/app" ], "/tests/resources/app", "/tests" );
+	this.mappings[ "/resources" ] = replaceNoCase( this.mappings[ "/app" ], "/tests/resources/app", "/tests/resources" );
+
 	// COLDBOX STATIC PROPERTY, DO NOT CHANGE UNLESS THIS IS NOT THE ROOT OF YOUR COLDBOX APP
 	COLDBOX_APP_ROOT_PATH = appPath;
 	// The web server mapping to this application. Used for remote purposes or static purposes
