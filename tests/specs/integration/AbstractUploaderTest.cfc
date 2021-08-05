@@ -66,7 +66,7 @@ component extends="tests.resources.ModuleIntegrationSpec" appMapping="/app" {
                 var result = {};
                 chunks.each( function( chunk ){
                     chunk[ "dztotalchunkcount" ] = totalChunkCount;
-                    var event = post(
+                    var event                    = post(
                         route  = "/upload/dropzone",
                         method = "GET",
                         params = chunk
@@ -112,7 +112,7 @@ component extends="tests.resources.ModuleIntegrationSpec" appMapping="/app" {
                 var result = {};
                 chunks.each( function( chunk ){
                     chunk[ "dztotalchunkcount" ] = totalChunkCount;
-                    var event = post(
+                    var event                    = post(
                         route  = "/upload/dropzone",
                         method = "GET",
                         params = chunk
@@ -160,7 +160,7 @@ component extends="tests.resources.ModuleIntegrationSpec" appMapping="/app" {
                 var result = {};
                 chunks.each( function( chunk ){
                     chunk[ "dztotalchunkcount" ] = totalChunkCount;
-                    var event = post(
+                    var event                    = post(
                         route  = "/upload/dropzone",
                         method = "GET",
                         params = chunk
