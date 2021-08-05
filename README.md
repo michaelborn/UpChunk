@@ -11,6 +11,14 @@
 ![Latest release](https://img.shields.io/github/v/release/michaelborn/UpChunk?style=flat-square)
 </center>
 
+## Features
+
+* Chunked uploads
+* Non-chunked uploads
+* DropZone support
+* Uploader.js support
+* Easily extendable for other vendors
+
 ## Getting Started
 
 1. Install this module into your ColdBox app: `box install UpChunk`
@@ -27,15 +35,7 @@ moduleSettings = {
       /**
        * Set the final resting place of uploaded files.
        */
-      uploadDir : "resources/assets/uploads/",
-
-      /**
-       * Wirebox ID that points to the vendor CFC to use for uploads.
-       * 
-       * You can write and use your own custom upload vendor...
-       * ...but it must implement UpChunk.models.iChunk and extend UpChunk.models.AbstractUploader.
-       */
-      strategy : "DropZone@UpChunk"
+      uploadDir : "resources/assets/uploads/"
     }
 };
 ```
@@ -112,8 +112,26 @@ component extends="UpChunk.models.AbstractUploader" {
 }
 ```
 
-## Limitations
+## TODO
 
-Lucee doesn't broadcast the filename very well. :/ 
+* [Pull original filename from form field parts](https://stackoverflow.com/questions/14143076/storing-file-name-when-uploading-using-coldfusion)
+* Add TestBox specs:
+  * integration test chunked uploads
+  * integration test non-chunked uploads
+  * unit test vendor providers
 
-See [this SO post](coldfusion get body filename), but basically you can avoid this by sending a `filename` parameter in the upload request.
+## The Good News
+
+> For all have sinned, and come short of the glory of God ([Romans 3:23](https://www.kingjamesbibleonline.org/Romans-3-23/))
+
+> But God commendeth his love toward us, in that, while we were yet sinners, Christ died for us. ([Romans 5:8](https://www.kingjamesbibleonline.org/Romans-5-8))
+
+> That if thou shalt confess with thy mouth the Lord Jesus, and shalt believe in thine heart that God hath raised him from the dead, thou shalt be saved. ([Romans 10:9](https://www.kingjamesbibleonline.org/Romans-10-9/))
+ 
+## Repository
+
+Copyright 2021 (and on) - [Michael Born](https://michaelborn.me/)
+
+* [Homepage](https://github.com/michaelborn/UpChunk)
+* [Issue Tracker](https://github.com/michaelborn/UpChunk/issues)
+* [New BSD License](https://github.com/michaelborn/UpChunk/blob/master/LICENSE.txt)

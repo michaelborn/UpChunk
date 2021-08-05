@@ -16,8 +16,8 @@
     "type":"modules",
     "dependencies":{},
     "devDependencies":{
-        "coldbox":"^5.0.0",
-        "testbox":"^3.0.0"
+        "coldbox":"^6.0.0",
+        "testbox":"^4.0.0"
     },
     "installPaths":{
         "testbox":"testbox/",
@@ -41,5 +41,11 @@
         "test",
         "tests",
         "cookie.png"
+    ],
+    "license":[
+        {
+            "URL":"https://github.com/michaelborn/UpChunk/blob/master/LICENSE",
+            "type":"BSD"
+        }
     ]
 }
