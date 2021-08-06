@@ -3,29 +3,21 @@ component extends="tests.resources.ModuleIntegrationSpec" appMapping="/app" {
     // reload Coldbox after spec
     this.unLoadColdbox = true;
 
+    variables.testTmpDir = expandPath( "/tests/resources/files/tmp/" );
+
     function run(){
         describe( "AbstractUploader Suite", function(){
             beforeEach( function(){
-                if ( directoryExists( variables.moduleSettings.tempDir ) ) {
-                    directoryDelete(
-                        variables.moduleSettings.tempDir,
-                        true
-                    );
-                }
-                directoryCreate( variables.moduleSettings.tempDir );
-                if ( directoryExists( variables.moduleSettings.uploadDir ) ) {
-                    directoryDelete(
-                        variables.moduleSettings.uploadDir,
-                        true
-                    );
-                }
-                directoryCreate( variables.moduleSettings.uploadDir );
+                ensureDirectoryExists( variables.moduleSettings.tempDir );
+                ensureDirectoryExists( variables.moduleSettings.uploadDir );
+                ensureDirectoryExists( variables.testTmpDir);
+
                 var original = expandPath( "/tests/resources/files/unsplash-cookie.jpg" );
 
                 /**
                  * We create a dummy copy because the upload will move the upload tmp file into its final location.
                  */
-                variables.uploadTestFile = getDirectoryFromPath( original ) & "UPLOAD-TEST.jpg";
+                variables.uploadTestFile = variables.testTmpDir & "UPLOAD-TEST.jpg";
                 if ( !fileExists( uploadTestFile ) ) {
                     fileCopy( original, uploadTestFile );
                 }
@@ -51,7 +43,7 @@ component extends="tests.resources.ModuleIntegrationSpec" appMapping="/app" {
                     originalFile,
                     100000,
                     function( chunk, size, index ){
-                        var chunkFile = getDirectoryFromPath( originalFile ) & "chunktest.#index#.part";
+                        var chunkFile = variables.testTmpDir & "chunktest.#index#.part";
                         fileWrite( chunkFile, chunk );
                         chunks.append( {
                             "file"         : chunkFile,
@@ -97,7 +89,7 @@ component extends="tests.resources.ModuleIntegrationSpec" appMapping="/app" {
                     originalFile,
                     100000,
                     function( chunk, size, index ){
-                        var chunkFile = getDirectoryFromPath( originalFile ) & "chunktest.#index#.part";
+                        var chunkFile = variables.testTmpDir & "chunktest.#index#.part";
                         fileWrite( chunkFile, chunk );
                         chunks.append( {
                             "file"         : chunkFile,
@@ -143,7 +135,7 @@ component extends="tests.resources.ModuleIntegrationSpec" appMapping="/app" {
                     originalFile,
                     100000,
                     function( chunk, size, index ){
-                        var chunkFile = getDirectoryFromPath( originalFile ) & "chunktest.#index#.part";
+                        var chunkFile = variables.testTmpDir & "chunktest.#index#.part";
                         fileWrite( chunkFile, chunk );
                         chunks.append( {
                             "file"         : chunkFile,
@@ -222,6 +214,16 @@ component extends="tests.resources.ModuleIntegrationSpec" appMapping="/app" {
             chunkIndex++;
         }
         inputStream.close();
+    }
+
+    private function ensureDirectoryExists( required string directory ){
+        if ( directoryExists( arguments.directory ) ) {
+            directoryDelete(
+                arguments.directory,
+                true
+            );
+        }
+        directoryCreate( arguments.directory );
     }
 
 }
