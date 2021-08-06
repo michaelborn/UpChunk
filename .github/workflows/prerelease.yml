@@ -27,6 +27,7 @@ jobs:
       - name: Start server
         run: |
           cd tests
+          box config set verboseErrors=true
           box set cfconfig_robustExceptionEnabled=true
           box server start cfengine=${{ matrix.cfengine }} --noSaveSettings
 
