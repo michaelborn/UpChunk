@@ -134,10 +134,12 @@ component
         }
         var finalFile = "#settings.uploadDir##arguments.upload.uuid#.#extension#";
         var allChunks = directoryList(
-            path     = arguments.upload.chunkDir,
-            recurse  = false,
-            listInfo = "name",
-            type     = "file"
+            arguments.upload.chunkDir,
+            false,
+            "name",
+            "*",
+            "name asc",
+            "file"
         );
         // if ( arrayLen( allChunks ) != rc.dztotalchunkcount ){
         //     throw(
@@ -155,26 +157,25 @@ component
          * chunk order is EXTREMELY important.
          * If a single chunk is appended to the final file out of order, the file will be corrupted.
          */
-        allChunks
-            .sort( "numeric", "asc" )
-            .each( function( filename ){
-                var chunkFile = "#upload.chunkDir##filename#";
-                if ( log.canDebug() ) {
-                    log.debug( "Moving chunk #chunkfile# to #finalFile#, file exists: #fileExists( chunkFile )#" );
-                }
-                if ( !fileExists( chunkFile ) ) {
-                    fileWrite(
-                        finalFile,
-                        fileReadBinary( chunkFile )
-                    );
-                } else {
-                    // For ACF compat, this may need to be a file Object.
-                    fileAppend(
-                        finalFile,
-                        fileReadBinary( chunkFile )
-                    );
-                }
-            } );
+        arraySort( allChunks, "numeric", "asc" );
+        for ( var filename in allChunks ) {
+            var chunkFile = "#upload.chunkDir##filename#";
+            if ( log.canDebug() ) {
+                log.debug( "Moving chunk #chunkfile# to #finalFile#, file exists: #fileExists( chunkFile )#" );
+            }
+            if ( !fileExists( chunkFile ) ) {
+                fileWrite(
+                    finalFile,
+                    fileReadBinary( chunkFile )
+                );
+            } else {
+                // For ACF compat, this may need to be a file Object.
+                fileAppend(
+                    finalFile,
+                    fileReadBinary( chunkFile )
+                );
+            }
+        }
         directoryDelete( arguments.upload.chunkDir, true );
 
         return finalFile;
