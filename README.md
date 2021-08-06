@@ -4,16 +4,17 @@
 
 [![All Contributors](https://img.shields.io/github/contributors/michaelborn/UpChunk?style=flat-square)](https://github.com/michaelborn/upchunk/graphs/contributors)
 |
-![Release](https://github.com/michaelborn/upchunk/actions/workflows/release/badge.svg)
+![Release](https://github.com/michaelborn/upchunk/actions/workflows/release.yml/badge.svg)
 </center>
 
 ## Features
 
-* Chunked uploads
-* Non-chunked uploads
-* DropZone support
-* Uploader.js support
-* Easily extendable for other vendors
+* Chunked uploads 🥧
+* Non-chunked uploads 🍪
+* DropZone support ✅
+* Uploader.js support ✅
+* Easily extendable for other vendors 🔧
+* Supports Adobe 2016, 2018, 2021, and Lucee 5.3.8+ 📒
 
 ## Getting Started
 
@@ -108,13 +109,25 @@ component extends="UpChunk.models.AbstractUploader" {
 }
 ```
 
+## CONTRIBUTING
+
+* All contributions welcome!
+* Feel free to write a test, fix a README typo, or add a new vendor
+* Take a look at the `vendors/DropZone.cfc` to get started with a new upload vendor
+
+To get started hacking on UpChunk:
+
+1. Clone the module - `git clone git@github.com:michaelborn/UpChunk.git`
+2. Install dependencies - `box install`
+3. Run tests - `cd tests && box testbox run`
+4. Write code
+5. Run tests
+6. Push up a pull request
+
 ## TODO
 
 * [Pull original filename from form field parts](https://stackoverflow.com/questions/14143076/storing-file-name-when-uploading-using-coldfusion)
-* Add TestBox specs:
-  * integration test chunked uploads
-  * integration test non-chunked uploads
-  * unit test vendor providers
+* Add TestBox unit tests for each 'vendor' model
 
 ## The Good News
 
