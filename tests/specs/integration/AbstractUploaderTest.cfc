@@ -10,7 +10,7 @@ component extends="tests.resources.ModuleIntegrationSpec" appMapping="/app" {
             beforeEach( function(){
                 ensureDirectoryExists( variables.moduleSettings.tempDir );
                 ensureDirectoryExists( variables.moduleSettings.uploadDir );
-                ensureDirectoryExists( variables.testTmpDir);
+                ensureDirectoryExists( variables.testTmpDir );
 
                 var original = expandPath( "/tests/resources/files/unsplash-cookie.jpg" );
 
@@ -218,10 +218,7 @@ component extends="tests.resources.ModuleIntegrationSpec" appMapping="/app" {
 
     private function ensureDirectoryExists( required string directory ){
         if ( directoryExists( arguments.directory ) ) {
-            directoryDelete(
-                arguments.directory,
-                true
-            );
+            directoryDelete( arguments.directory, true );
         }
         directoryCreate( arguments.directory );
     }

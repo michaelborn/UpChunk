@@ -133,7 +133,14 @@ component
             directoryCreate( settings.uploadDir );
         }
         var finalFile = "#settings.uploadDir##arguments.upload.uuid#.#extension#";
-        var allChunks = directoryList( arguments.upload.chunkDir, false, "name", "*", "name asc", "file" );
+        var allChunks = directoryList(
+            arguments.upload.chunkDir,
+            false,
+            "name",
+            "*",
+            "name asc",
+            "file"
+        );
         // if ( arrayLen( allChunks ) != rc.dztotalchunkcount ){
         //     throw(
         //         message = "Invalid upload; cannot continue. The number of uploaded chunks does not match the supposed chunk count.",
@@ -151,7 +158,7 @@ component
          * If a single chunk is appended to the final file out of order, the file will be corrupted.
          */
         arraySort( allChunks, "numeric", "asc" );
-        for( var filename in allChunks ){
+        for ( var filename in allChunks ) {
             var chunkFile = "#upload.chunkDir##filename#";
             if ( log.canDebug() ) {
                 log.debug( "Moving chunk #chunkfile# to #finalFile#, file exists: #fileExists( chunkFile )#" );
