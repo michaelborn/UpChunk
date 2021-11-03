@@ -22,7 +22,7 @@ component {
         };
 
         binder.map( "DropZone@UpChunk" )
-                .to( "UpChunk.models.vendors.DropZone" )
+                .to( "upchunk.models.vendors.DropZone" )
                 .asSingleton();
     }
 

@@ -3,7 +3,7 @@
  *
  * https://github.com/simple-uploader/Uploader
  */
-component extends="UpChunk.models.AbstractUploader" singleton {
+component extends="upchunk.models.AbstractUploader" singleton {
 
     /**
      * Inspect the current coldbox event
