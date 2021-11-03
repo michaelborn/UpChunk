@@ -1,3 +1,12 @@
+# v2.0.2
+## 03 Nov 2021 — 20:49:34 UTC
+
+### 🐛 FIX
+
++ __\*:__ Correct release workflow
+ ([8519bc4](https://github.com/michaelborn/UpChunk/commit/8519bc435833a0c79fa9af8aa1d63715a6a5b79e))
+
+
 # v2.0.1
 ## 11 Aug 2021 — 13:23:38 UTC
 
