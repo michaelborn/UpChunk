@@ -67,9 +67,8 @@ component
         interceptorService.announce( "UpChunk_postUpload", upload );
 
         return {
-            error     : false,
-            partial   : upload.isChunked && !upload.isFinalChunk,
-            finalFile : finalFile
+            isPartial: upload.isChunked && !upload.isFinalChunk,
+            finalFile: finalFile
         };
     }
 

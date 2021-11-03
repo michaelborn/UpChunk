@@ -64,9 +64,6 @@ component extends="tests.resources.ModuleIntegrationSpec" appMapping="/app" {
                         params = chunk
                     );
                     result = event.getRenderData().data;
-
-                    expect( result ).toHaveKey( "error" );
-                    expect( result.error ).toBeFalse();
                 } );
                 expect( result ).toHaveKey( "finalFile" );
 
@@ -110,9 +107,6 @@ component extends="tests.resources.ModuleIntegrationSpec" appMapping="/app" {
                         params = chunk
                     );
                     result = event.getRenderData().data;
-
-                    expect( result ).toHaveKey( "error" );
-                    expect( result.error ).toBeFalse();
                 } );
                 expect( result ).toHaveKey( "finalFile" );
 
@@ -158,9 +152,6 @@ component extends="tests.resources.ModuleIntegrationSpec" appMapping="/app" {
                         params = chunk
                     );
                     result = event.getRenderData().data;
-
-                    expect( result ).toHaveKey( "error" );
-                    expect( result.error ).toBeFalse();
                     // debug( chunk );
                     // debug( result );
                 } );

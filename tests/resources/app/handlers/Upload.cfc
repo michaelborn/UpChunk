@@ -14,7 +14,7 @@ component extends="Main" {
 		var UpChunk = wirebox.getInstance( prc.vendor );
 		var results = UpChunk.handleUpload( event );
 
-		if ( results.partial ){
+		if ( results.isPartial ){
 			// don't try to process a "file upload" when it's only a chunk upload!
 			event.renderData(
 				type = "JSON",
