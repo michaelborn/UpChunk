@@ -14,14 +14,34 @@ component {
             /**
              * Set the final resting place of uploaded files.
              */
-            uploadDir : "/resources/assets/uploads/"
+            uploadDir : "/resources/assets/uploads/",
+
+            /**
+             * what field names should we look for in the rc memento?
+             */
+            "fields" : {
+                // points to the location of the uploaded binary
+                "file"       : "fileUpload",
+                // filename, helpful for creating a user-friendly final filename
+                "filename"   : "filename",
+                // An id unique to each chunked file upload session for tracking and organized groups of chunks.
+                "uniqueId"   : "dzuuid",
+                // what chunk index is this current request?
+                "chunkIndex" : "dzchunkindex",
+                // total number of upload chunks, helps determine when the file is fully uploaded
+                "totalChunks": "dztotalchunkcount"
+            }
         };
 
         interceptorSettings = {
             customInterceptionPoints = "UpChunk_preUpload,UpChunk_postUpload"
         };
 
-        binder.map( "DropZone@UpChunk" )
+        binder.map( "DropZone@upchunk" )
+                .to( "upchunk.models.vendors.DropZone" )
+                .asSingleton();
+
+        binder.map( "UpChunk@upchunk" )
                 .to( "upchunk.models.vendors.DropZone" )
                 .asSingleton();
     }
