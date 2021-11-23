@@ -35,10 +35,24 @@ moduleSettings = {
       uploadDir : "resources/assets/uploads/",
 
       /**
+       * Is the `chunkIndex` parameter zero-based?
+       */
+      isIndexZeroBased : true,
+
+      /**
        * what field names should we look for in the rc memento?
        */
       "fields" : {
-          // see #Configuration
+         // points to the location of the uploaded binary
+         "file"       : "fileUpload",
+         // filename, helpful for creating a user-friendly final filename
+         "filename"   : "filename",
+         // An id unique to each chunked file upload session for tracking and organized groups of chunks.
+         "uniqueId"   : "dzuuid",
+         // what chunk index is this current request?
+         "chunkIndex" : "dzchunkindex",
+         // total number of upload chunks, helps determine when the file is fully uploaded
+         "totalChunks": "dztotalchunkcount"
       }
     }
 };
@@ -78,7 +92,10 @@ Configuration for[simple-uploader.js](https://github.com/simple-uploader/Uploade
 
 ```js
 moduleSettings["UpChunk"] = {
-    "isIndexZeroBased" : false,
+   /**
+    * Is the `chunkIndex` parameter zero-based?
+    */
+   isIndexZeroBased : false,
    /**
     * what field names should we look for in the rc memento?
     */
@@ -127,15 +144,39 @@ moduleSettings["UpChunk"] = {
 
 UpChunk supports the concept of "vendors", i.e. components which perform additional work to add support for a specific javascript uploader vendor, such as `simple-uploader.js` via `Uploader@upchunk`.
 
-Feel free to write your own upload vendor, but it *must* extend `UpChunk.models.UpChunk`:
+Feel free to write your own vendor component. A typical vendor will extend `UpChunk.models.UpChunk` and overwrite the `parseUpload()` method:
 
 ```js
+/**
+ * FunkyUploader
+ * Handle abnormal Funky uploads
+ */
 component extends="UpChunk.models.UpChunk" {
 
+   /**
+    * FunkyUploads does a funny way of chunking,
+    * so we need to check for some custom form fields to detect the chunk stuff.
+    */
+   function parseUpload( required struct memento ){
+       // do funky stuff
+   }
 }
 ```
 
-Feel free to overload any of the methods outlined in the `IChunk.cfc` interface:
+Once you've written your vendor, you simply inject it and use it like the standard `UpChunk` object:
+
+```js
+var upload = getInstance( "MyCustomUploadVendor" )
+                .handleUpload();
+```
+
+In this example ☝, the `handleUpload()` method in UpChunk will call your custom `parseUpload()` method, and will then process the upload as normal.
+
+### Extending UpChunk
+
+For more complex scenarios, you may find it necessary to extend UpChunk.
+
+You can do this by overwriting any or all of the UpChunk methods outlined in the `IChunk.cfc` interface:
 
 ```js
 /**
@@ -176,45 +217,12 @@ interface {
 }
 ```
 
-Once you've written your vendor, you simply inject it and use it like the standard `UpChunk` object:
-
-```js
-var upload = getInstance( "MyCustomUploadVendor" )
-                .handleUpload();
-```
-
-In this example ☝, the `handleUpload()` method in UpChunk will call `parseUpload()` to check for a chunked or non-chunked upload, and will then process the upload as normal.
-
-Though if you need a new feature not currently supported, would you consider [opening a new issue](https://github.com/michaelborn/UpChunk/issues)?
-
-### Extending UpChunk
-
-For more complex scenarios, you may find it necessary to extend UpChunk.
-
-You can do this by overwriting any or all of the UpChunk methods `handleUpload()`, `handleNormalUpload()` or `handleChunkedUpload()` defined in `UpChunk.cfc`:
-
-```js
-/**
- * FunkyUploader
- * Handle abnormal Funky uploads
- */
-component extends="UpChunk.models.UpChunk" {
-
-   /**
-    * FunkyUploads does a funny way of chunking,
-    * so we need to massage the chunks a bit to get the upload working right.
-    */
-   function handleChunkedUpload( required struct upload ){
-       // do funky stuff
-   }
-}
-```
+> **Note:** Looking for a new feature, or hoping to add an upload vendor? Consider [opening a new issue](https://github.com/michaelborn/UpChunk/issues) or adding a [Pull Request](https://github.com/michaelborn/UpChunk/pulls)?
 
 ## CONTRIBUTING
 
 * All contributions welcome!
 * Feel free to write a test, fix a README typo, or add a new vendor
-* Take a look at the `vendors/DropZone.cfc` to get started with a new upload vendor
 
 To get started hacking on UpChunk:
 
@@ -223,7 +231,7 @@ To get started hacking on UpChunk:
 3. Run tests - `cd tests && box testbox run`
 4. Write code
 5. Run tests
-6. Push up a pull request
+6. Push up a [pull request](https://github.com/michaelborn/UpChunk/pulls)
 
 ## TODO
 
