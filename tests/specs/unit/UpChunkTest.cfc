@@ -77,6 +77,17 @@ component extends="coldbox.system.testing.BaseModelTest" model="upchunk.models.U
                     expect( upload.isFinalChunk ).toBeTrue();
                 });
             });
+            xdescribe( "+handleUpload", function(){
+                it( "should handle normal file uploads", function(){
+                } );
+    
+                it( "should handle file chunk upload", function(){
+                } );
+    
+                it( "should merge file chunks", function(){
+                    // Create a few test chunks and see if they get merged together
+                } );
+            } );
         } );
     }
 

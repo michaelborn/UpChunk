@@ -6,7 +6,7 @@ component extends="tests.resources.ModuleIntegrationSpec" appMapping="/app" {
     variables.testTmpDir = expandPath( "/tests/resources/files/tmp/" );
 
     function run(){
-        describe( "AbstractUploader Suite", function(){
+        describe( "UpChunk Suite", function(){
             beforeEach( function(){
                 ensureDirectoryExists( variables.moduleSettings.tempDir );
                 ensureDirectoryExists( variables.moduleSettings.uploadDir );
@@ -23,10 +23,14 @@ component extends="tests.resources.ModuleIntegrationSpec" appMapping="/app" {
                 }
             } );
             it( "can upload a non-chunked file", function(){
+                var memento = {
+                    "fileUpload": variables.uploadTestFile,
+                    "filename"  : "UPLOAD-TEST.jpg"
+                };
                 var event = post(
                     route  = "/upload/dropzone",
                     method = "POST",
-                    params = { "file" : variables.uploadTestFile }
+                    params = memento
                 );
                 expect( fileExists( variables.moduleSettings.uploadDir & "UPLOAD-TEST.jpg" ) ).toBeTrue();
             } );
@@ -46,10 +50,10 @@ component extends="tests.resources.ModuleIntegrationSpec" appMapping="/app" {
                         var chunkFile = variables.testTmpDir & "chunktest.#index#.part";
                         fileWrite( chunkFile, chunk );
                         chunks.append( {
-                            "file"         : chunkFile,
-                            "dzchunkindex" : index,
-                            "filename"     : "chunktest.txt",
-                            "dzuuid"       : uploadTrackerID
+                            "fileUpload"  : chunkFile,
+                            "dzchunkindex": index,
+                            "filename"    : "chunktest.txt",
+                            "dzuuid"      : uploadTrackerID
                         } );
                         totalChunkCount++;
                     }
@@ -89,10 +93,10 @@ component extends="tests.resources.ModuleIntegrationSpec" appMapping="/app" {
                         var chunkFile = variables.testTmpDir & "chunktest.#index#.part";
                         fileWrite( chunkFile, chunk );
                         chunks.append( {
-                            "file"         : chunkFile,
-                            "dzchunkindex" : index,
-                            "filename"     : "chunktest.txt",
-                            "dzuuid"       : uploadTrackerID
+                            "fileUpload"  : chunkFile,
+                            "dzchunkindex": index,
+                            "filename"    : "chunktest.txt",
+                            "dzuuid"      : uploadTrackerID
                         } );
                         totalChunkCount++;
                     }
@@ -132,10 +136,10 @@ component extends="tests.resources.ModuleIntegrationSpec" appMapping="/app" {
                         var chunkFile = variables.testTmpDir & "chunktest.#index#.part";
                         fileWrite( chunkFile, chunk );
                         chunks.append( {
-                            "file"         : chunkFile,
-                            "dzchunkindex" : index,
-                            "filename"     : "chunked-file-upload.jpg",
-                            "dzuuid"       : uploadTrackerID
+                            "fileUpload"  : chunkFile,
+                            "dzchunkindex": index,
+                            "filename"    : "chunked-file-upload.jpg",
+                            "dzuuid"      : uploadTrackerID
                         } );
                         totalChunkCount++;
                     }

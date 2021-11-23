@@ -37,12 +37,12 @@ component {
             customInterceptionPoints = "UpChunk_preUpload,UpChunk_postUpload"
         };
 
-        binder.map( "DropZone@upchunk" )
-                .to( "upchunk.models.vendors.DropZone" )
+        binder.map( "Uploader@upchunk" )
+                .to( "upchunk.models.vendors.Uploader" )
                 .asSingleton();
 
         binder.map( "UpChunk@upchunk" )
-                .to( "upchunk.models.vendors.DropZone" )
+                .to( "upchunk.models.UpChunk" )
                 .asSingleton();
     }
 

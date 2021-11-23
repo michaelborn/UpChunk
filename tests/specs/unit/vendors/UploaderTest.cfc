@@ -3,7 +3,7 @@
  * and then create it, prepare it for mocking and then place it in the variables scope as 'model'. It is your
  * responsibility to update the model annotation instantiation path and init your model.
  */
-component extends="coldbox.system.testing.BaseModelTest" model="upchunk.models.vendors.DropZone" {
+component extends="coldbox.system.testing.BaseModelTest" model="upchunk.models.vendors.Uploader" {
 
     /*********************************** LIFE CYCLE Methods ***********************************/
 
@@ -24,7 +24,7 @@ component extends="coldbox.system.testing.BaseModelTest" model="upchunk.models.v
     /*********************************** BDD SUITES ***********************************/
 
     function run(){
-        describe( "DropZone vendor Suite", function(){
+        describe( "Uploader vendor Suite", function(){
             it( "can initialize", function(){
                 expect( variables.model ).toBeComponent();
             } );
@@ -34,25 +34,20 @@ component extends="coldbox.system.testing.BaseModelTest" model="upchunk.models.v
              * (i.e. this test would make more sense in an integration spec, where the module is actually loaded and active.)
              */
             xit( "can getInstance", function() {
-                expect( application.wirebox.getInstance( "DropZone@upchunk" ) ).toBeComponent();
+                expect( application.wirebox.getInstance( "Uploader@upchunk" ) ).toBeComponent();
             });
 
             describe( "+parseUpload", function() {
                 it( "can parse minimal upload", function() {
-                    var eventMock = {
-                        "getValue" : function( string key, any default ){
-                            var context = {
-                                "file"             : "letspretendImabinary",
-                                "filename"         : "IMG_20210416_1.jpg",
-                                "uuid"             : createUUID(),
-                                "dzchunkindex"     : 0,
-                                "dztotalchunkcount": 1
-                            };
-                            return context.keyExists( key ) ? context[ key ] : arguments.default;
-                        }
+                    var memento = {
+                        "file"             : "letspretendImabinary",
+                        "filename"         : "IMG_20210416_1.jpg",
+                        "uuid"             : createUUID(),
+                        "dzchunkindex"     : 0,
+                        "dztotalchunkcount": 1
                     };
 
-                    var upload = variables.model.parseUpload( eventMock );
+                    var upload = variables.model.parseUpload( memento );
                     expect( upload ).toBeStruct()
                                     .toHaveKey( "isChunked" )
                                     .toHaveKey( "file" )

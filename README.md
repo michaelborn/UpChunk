@@ -32,72 +32,173 @@ moduleSettings = {
       /**
        * Set the final resting place of uploaded files.
        */
-      uploadDir : "resources/assets/uploads/"
+      uploadDir : "resources/assets/uploads/",
+
+      /**
+       * what field names should we look for in the rc memento?
+       */
+      "fields" : {
+          // see #Configuration
+      }
     }
 };
 ```
 
+By default, UpChunk ships with DropZone-compatible `fields` config. See #Configuration for more details.
+
 3. In your ColdBox handler, inject and init your vendor of choice, like `DropZone@UpChunk`.
-4. Run the `handleUpload()` method, making sure to pass the current Event object:
+4. Run the `handleUpload()` method, making sure to pass the current `rc` object:
 
 ```js
 function upload( event, rc, prc ){
-    var UpChunk = wirebox.getInstance( "DropZone@UpChunk" );
-    var finalFile = UpChunk.handleUpload( arguments.event );
+    var UpChunk = wirebox.getInstance( "UpChunk@upchunk" );
+    var finalFile = UpChunk.handleUpload( arguments.rc );
 
     writeOutput( "Uploaded file to #finalFile#" );
 }
 ```
 
-## Adding an UpChunk Vendor
+## How It Works
 
-You can write and use your own custom upload vendor, but it *must* extend `UpChunk.models.AbstractUploader` (which also implements `UpChunk.models.iChunk`.)
+UpChunk primarily works in three steps:
+
+1. Parsing the upload. UpChunk reads the provided `rc` memento to determine what sort of upload this is (chunked or non-chunked, i.e. an entire file) and the various parameters specific to the upload, such as which field has the binary, what filename to use, the current chunk number, etc.
+2. Uploading the file or file chunk. If this is an entire file, the upload is complete and UpChunk responds with a result struct.
+3. For chunked uploads, the final chunk uploaded triggers a compilation process. UpChunk will save the final chunk, and iterate through the entire set of chunks for the current upload, appending each to the final file. Once the file is complete, UpChunk responds with a result struct.
+## Configuration
+
+### Uploader Configuration
+
+Configuration for[simple-uploader.js](https://github.com/simple-uploader/Uploader).
+
+> **Note:** simple-uploader.js [utilizes base 1 numbering for `chunkNumber` and `totalChunks`](https://github.com/simple-uploader/Uploader#how-do-i-set-it-up-with-my-server). For this reason, we need to set `isIndexZeroBased: false`.
+
+
+> **Note:** simple-uploader.js supports a custom `file` parameter name in their frontend options. If you have changed this, please ensure that you change the `fileUpload` value below 👇 as well.
 
 ```js
-component extends="UpChunk.models.AbstractUploader" {
+moduleSettings["UpChunk"] = {
+    "isIndexZeroBased" : false,
+   /**
+    * what field names should we look for in the rc memento?
+    */
+    "fields" : {
+      // points to the location of the uploaded binary
+      "file"       : "file",
+      // filename, helpful for creating a user-friendly final filename
+      "filename"   : "filename",
+      // An id unique to each chunked file upload session for tracking and organized groups of chunks.
+      "uniqueId"   : "identifier",
+      // what chunk index is this current request?
+      "chunkIndex" : "chunkNumber",
+      // total number of upload chunks, helps determine when the file is fully uploaded
+      "totalChunks": "totalChunks"
+    }
+};
+```
+
+### DropZone Configuration
+
+Here's the configuration for [DropZone.js](https://www.dropzone.dev/js/) support.
+
+> **Note:** DropZone supports a custom `file` parameter name in their frontend options. If you have changed this, please ensure that you change the `fileUpload` value below 👇 as well.
+
+```js
+moduleSettings["UpChunk"] = {
+   /**
+    * what field names should we look for in the rc memento?
+    */
+    "fields" : {
+      // points to the location of the uploaded binary
+      "file"       : "fileUpload",
+      // filename, helpful for creating a user-friendly final filename
+      "filename"   : "filename",
+      // An id unique to each chunked file upload session for tracking and organized groups of chunks.
+      "uniqueId"   : "dzuuid",
+      // what chunk index is this current request?
+      "chunkIndex" : "dzchunkindex",
+      // total number of upload chunks, helps determine when the file is fully uploaded
+      "totalChunks": "dztotalchunkcount"
+    }
+};
+```
+
+## UpChunk Vendors
+
+UpChunk supports the concept of "vendors", i.e. components which perform additional work to add support for a specific javascript uploader vendor, such as `simple-uploader.js` via `Uploader@upchunk`.
+
+Feel free to write your own upload vendor, but it *must* extend `UpChunk.models.UpChunk`:
+
+```js
+component extends="UpChunk.models.UpChunk" {
 
 }
 ```
 
-Then add a `parseUpload()` method which takes in the RequestContext object and returns a struct of info about the current upload:
+Feel free to overload any of the methods outlined in the `IChunk.cfc` interface:
 
 ```js
-   /**
-     * Inspect the current coldbox event
-     * and return info about the current upload (if it is an upload.)
+/**
+ * Defines an interface to handle a particular chunk upload vendor.
+ *
+ */
+interface {
+
+    /**
+     * Inspect the provided form scope and return info about the current upload (if it is an upload.)
+     * 
+     * @memento the form scope containing upload parameters. You can pass this from a handler via `UpChunk.handleUpload( arguments.rc )`
      */
-    public struct function parseUpload( required struct event ){
-        return {
-            // is the current request a chunked upload?
-            isChunked    : arguments.event.getValue( "dzchunkindex", "" ) != "",
-            // what is the upload filename?
-            filename     : event.getValue( "file" ),
-            // An id unique to each chunked file upload session for tracking and organized groups of chunks.
-            uuid         : event.getValue( "dzuuid", "" ),
-            // what chunk index is this current request?
-            index        : arguments.event.getValue( "dzchunkindex", -1 ),
-            // is this the last chunk in the upload
-            isFinalChunk : arguments.event.getValue( "dztotalchunkcount", 0 ) == (
-                arguments.event.getValue( "dzchunkindex", -1 ) + 1
-            )
-        };
-    }
+    public struct function parseUpload( required struct memento );
+
+    /**
+     * Process a non-chunked file upload
+     * Runs vendor `parseUpload()` event to retrieve upload parameters
+     * Calls {@see handleChunkedUpload} or {@see handleNormalUpload}, depending on upload.isChunked
+     */
+    public struct function handleUpload( required struct memento );
+
+    /**
+     * Process a file upload chunked
+     * @upload {Struct} parameters for upload, parsed from event and defined in vendor parseUpload() method
+     */
+    public string function handleChunkedUpload( required struct upload );
+
+    /**
+     * Handle final merging of all upload chunks into a single file
+     * Executed only on upload of last file chunk.
+     *
+     * @upload {Struct} parameters for upload, parsed from event and defined in vendor parseUpload() method
+     * @returns String - returns path to completed file
+     */
+    public string function mergeChunks( required struct upload );
+
+}
 ```
 
-This will vary depending on the parameters passed in the request. DropZone prepends all chunking parameters with `dz`, for instance.
+Once you've written your vendor, you simply inject it and use it like the standard `UpChunk` object:
+
+```js
+var upload = getInstance( "MyCustomUploadVendor" )
+                .handleUpload();
+```
+
+In this example ☝, the `handleUpload()` method in UpChunk will call `parseUpload()` to check for a chunked or non-chunked upload, and will then process the upload as normal.
+
+Though if you need a new feature not currently supported, would you consider [opening a new issue](https://github.com/michaelborn/UpChunk/issues)?
 
 ### Extending UpChunk
 
 For more complex scenarios, you may find it necessary to extend UpChunk.
 
-You can do this by overwriting any or all of the UpChunk methods `handleUpload()`, `handleNormalUpload()` or `handleChunkedUpload()` defined in `AbstractUploader.cfc`:
+You can do this by overwriting any or all of the UpChunk methods `handleUpload()`, `handleNormalUpload()` or `handleChunkedUpload()` defined in `UpChunk.cfc`:
 
 ```js
 /**
  * FunkyUploader
  * Handle abnormal Funky uploads
  */
-component extends="UpChunk.models.AbstractUploader" {
+component extends="UpChunk.models.UpChunk" {
 
    /**
     * FunkyUploads does a funny way of chunking,
@@ -127,7 +228,7 @@ To get started hacking on UpChunk:
 ## TODO
 
 * [Pull original filename from form field parts](https://stackoverflow.com/questions/14143076/storing-file-name-when-uploading-using-coldfusion)
-* Add TestBox unit tests for each 'vendor' model
+* Add docs for more upload vendors
 
 ## The Good News
 
