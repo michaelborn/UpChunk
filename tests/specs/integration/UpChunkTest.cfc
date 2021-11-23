@@ -59,6 +59,9 @@ component extends="tests.resources.ModuleIntegrationSpec" appMapping="/app" {
                     }
                 );
 
+                /**
+                 * upload all chunks and check the resulting file
+                 */
                 var result = {};
                 chunks.each( function( chunk ){
                     chunk[ "dztotalchunkcount" ] = totalChunkCount;
@@ -69,8 +72,12 @@ component extends="tests.resources.ModuleIntegrationSpec" appMapping="/app" {
                     );
                     result = event.getRenderData().data;
                 } );
-                expect( result ).toHaveKey( "finalFile" );
 
+                debug( result );
+                expect( result ).toHaveKey( "finalFile" );
+                expect( result ).toHaveKey( "error" );
+
+                expect( result.error ).toBeFalse();
                 expect( fileExists( result.finalFile ) );
                 expect( listLast( result.finalFile, "." ) ).toBe(
                     listLast( originalFile, "." ),

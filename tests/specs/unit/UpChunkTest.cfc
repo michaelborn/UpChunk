@@ -42,6 +42,7 @@ component extends="coldbox.system.testing.BaseModelTest" model="upchunk.models.U
                     variables.model.$property(
                         propertyName = "settings",
                         mock = {
+                            "isIndexZeroBased" : true,
                             "fields" : {
                                 "file"       : "fileUpload",
                                 "filename"   : "filename",
@@ -74,6 +75,43 @@ component extends="coldbox.system.testing.BaseModelTest" model="upchunk.models.U
                     expect( upload.isChunked ).toBeTrue();
                     expect( upload.file ).toBe( "letspretendImabinary" );
                     expect( upload.original ).toBe( "IMG_20210416_1.jpg" );
+                    expect( upload.isFinalChunk ).toBeTrue();
+                });
+                it( "can parse upload with 1-based chunk index", function() {
+                    variables.model.$property(
+                        propertyName = "settings",
+                        mock = {
+                            "isIndexZeroBased" : false,
+                            "fields" : {
+                                "file"       : "fileUpload",
+                                "filename"   : "filename",
+                                "uniqueId"   : "dzuuid",
+                                "chunkIndex" : "dzchunkindex",
+                                "totalChunks": "dztotalchunkcount"
+                            }
+                        }
+                    );
+                    var eventMock = {
+                        "fileUpload"       : "letspretendImabinary",
+                        "filename"         : "IMG_20210416_1.jpg",
+                        "uuid"             : createUUID(),
+                        "dzchunkindex"     : 1,
+                        "dztotalchunkcount": 2
+                    };
+
+                    var upload = variables.model.parseUpload( eventMock );
+                    expect( upload.isFinalChunk ).toBeFalse();
+                });
+                it( "can parse upload with 0-based chunk index", function() {
+                    var eventMock = {
+                        "fileUpload"       : "letspretendImabinary",
+                        "filename"         : "IMG_20210416_1.jpg",
+                        "uuid"             : createUUID(),
+                        "dzchunkindex"     : 1,
+                        "dztotalchunkcount": 2
+                    };
+
+                    var upload = variables.model.parseUpload( eventMock );
                     expect( upload.isFinalChunk ).toBeTrue();
                 });
             });

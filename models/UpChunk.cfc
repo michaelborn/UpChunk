@@ -44,6 +44,10 @@ component
         var chunkIndex = arguments.memento.keyExists( settings.fields.chunkIndex ) ? arguments.memento[ settings.fields.chunkIndex ] : -1;
         var totalChunks = arguments.memento.keyExists( settings.fields.totalChunks ) ? arguments.memento[ settings.fields.totalChunks ] : 0;
 
+        if ( settings.isIndexZeroBased ){
+            chunkIndex = chunkIndex + 1;
+        }
+
         return {
             // is the current request a chunked upload?
             isChunked    : arguments.memento.keyExists( settings.fields.chunkIndex ),
@@ -56,7 +60,7 @@ component
             // what chunk index is this current request?
             index        : chunkIndex,
             // is this the last chunk in the upload
-            isFinalChunk : totalChunks == ( chunkIndex + 1 )
+            isFinalChunk : totalChunks <= chunkIndex
         };
     }
 

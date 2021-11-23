@@ -17,6 +17,11 @@ component {
             uploadDir : "/resources/assets/uploads/",
 
             /**
+             * Is the `chunkIndex` parameter zero-based?
+             */
+            isIndexZeroBased : true,
+
+            /**
              * what field names should we look for in the rc memento?
              */
             "fields" : {
