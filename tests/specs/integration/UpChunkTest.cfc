@@ -205,7 +205,8 @@ component extends="tests.resources.ModuleIntegrationSpec" appMapping="/app" {
             fileSize -= chunkLength;
             processChunk( binaryChunk, chunkLength, chunkIndex );
 
-            byteChunkPart = javacast( "null", 0 );
+            // avoid memory overflow
+            binaryChunk = javacast( "null", 0 );
             chunkIndex++;
         }
         inputStream.close();
