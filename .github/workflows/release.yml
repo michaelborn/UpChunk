@@ -52,7 +52,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Run Semantic Release
-        uses: Ortus-Solutions/semantic-release-action@v1
+        uses: Ortus-Solutions/semantic-release-action@v1.1
         with:
           githubToken: ${{ secrets.GH_TOKEN }}
           forgeboxToken: ${{ secrets.FORGEBOX_TOKEN }}
