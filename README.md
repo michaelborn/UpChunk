@@ -9,12 +9,10 @@
 
 ## Features
 
-* Chunked uploads 🥧
-* Non-chunked uploads 🍪
-* DropZone support ✅
-* Uploader.js support ✅
-* Easily extendable for other vendors 🔧
-* Supports Adobe 2016, 2018, 2021, and Lucee 5.3.8+ 📒
+* Chunked (split) and normal uploads
+* Tested with [DropZone.js](https://www.dropzone.dev/js/) and [simple-uploader.js](https://github.com/simple-uploader/Uploader)
+* Easily extendable for other vendors
+* Supports Adobe 2016, 2018, 2021, and Lucee 5.3.8+
 
 ## Getting Started
 
@@ -88,7 +86,7 @@ Configuration for[simple-uploader.js](https://github.com/simple-uploader/Uploade
 > **Note:** simple-uploader.js [utilizes base 1 numbering for `chunkNumber` and `totalChunks`](https://github.com/simple-uploader/Uploader#how-do-i-set-it-up-with-my-server). For this reason, we need to set `isIndexZeroBased: false`.
 
 
-> **Note:** simple-uploader.js supports a custom `file` parameter name in their frontend options. If you have changed this, please ensure that you change the `fileUpload` value below 👇 as well.
+> **Note:** simple-uploader.js supports a custom `file` parameter name in their frontend options. If you have changed this, please ensure that you change the `fields.file` setting to match.
 
 ```js
 moduleSettings["UpChunk"] = {
@@ -118,7 +116,7 @@ moduleSettings["UpChunk"] = {
 
 Here's the configuration for [DropZone.js](https://www.dropzone.dev/js/) support.
 
-> **Note:** DropZone supports a custom `file` parameter name in their frontend options. If you have changed this, please ensure that you change the `fileUpload` value below 👇 as well.
+> **Note:** DropZone supports a custom `file` parameter name in their frontend options. If you have changed this, please ensure that you change the `fields.file` setting to match.
 
 ```js
 moduleSettings["UpChunk"] = {
