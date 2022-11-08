@@ -6,7 +6,7 @@
  * extend this component ( `UpChunk.models.AbstractUploader` and override the `parseUpload()` method.
  */
 component
-    implements="upchunk.models.IChunk"
+    implements="IChunk"
     accessors ="true"
     singleton
 {
