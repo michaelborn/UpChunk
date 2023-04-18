@@ -7,29 +7,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.1.0] - 2023-04-18
+
 ## Changed
 
-* Updated test harness and workflows
-* Updated Github Actions CI builds
+-   Updated test harness and workflows
+-   Updated Github Actions CI builds
 
 ### Fixed
 
-* Fix virtual mapping for interface name
- ([2a78ef6](https://github.com/michaelborn/UpChunk/pull/5/commits/2a78ef6900ccab3053aa4e563ac72267c2b8816a)) Thanks [@murpg](https://github.com/murpg)!
+-   Fix virtual mapping for interface name
+    ([2a78ef6](https://github.com/michaelborn/UpChunk/pull/5/commits/2a78ef6900ccab3053aa4e563ac72267c2b8816a)) Thanks [@murpg](https://github.com/murpg)!
 
 ## [2.0.2] - 2021-11-03
 
 ### Fixed
 
-* Correct release workflow
- ([8519bc4](https://github.com/michaelborn/UpChunk/commit/8519bc435833a0c79fa9af8aa1d63715a6a5b79e))
-
+-   Correct release workflow
+    ([8519bc4](https://github.com/michaelborn/UpChunk/commit/8519bc435833a0c79fa9af8aa1d63715a6a5b79e))
 
 ## v2.0.1 - 2021-08-11
 
 ### Fixed
 
-* Use Github artifacts committer to commit new box.json version
- ([fca7f61](https://github.com/michaelborn/UpChunk/commit/fca7f613a91a923465522349b684c469e154071f))
-* Set correct version in box.json
- ([2f0922b](https://github.com/michaelborn/UpChunk/commit/2f0922b340a012898aa45c655488734e4e8951af))
+-   Use Github artifacts committer to commit new box.json version
+    ([fca7f61](https://github.com/michaelborn/UpChunk/commit/fca7f613a91a923465522349b684c469e154071f))
+-   Set correct version in box.json
+    ([2f0922b](https://github.com/michaelborn/UpChunk/commit/2f0922b340a012898aa45c655488734e4e8951af))
+
+[Unreleased]: https://github.com/michaelborn/UpChunk/compare/v2.1.0...HEAD
+
+[2.1.0]: https://github.com/michaelborn/UpChunk/compare/16b36372ba6a6e59934a22f160708865461cacd9...v2.1.0
