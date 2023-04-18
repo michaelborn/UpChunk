@@ -1,5 +1,4 @@
-
-name: PRs and Branches
+name: Pull Requests
 
 on:
   push:
@@ -7,46 +6,22 @@ on:
       - "main"
       - "master"
       - "development"
+      - "releases/v*"
   pull_request:
     branches:
-      - main
-      - master
+      - "releases/v*"
       - development
 
 jobs:
   tests:
-    runs-on: ubuntu-latest
-    name: Tests
-    strategy:
-      fail-fast: true
-      matrix:
-        cfengine: ["lucee@5", "adobe@2016", "adobe@2018", "adobe@2021"]
+    uses: ./.github/workflows/tests.yml
+
+  formatCheck:
+    name: Checks Source Code Formatting
+    runs-on: ubuntu-20.04
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v2
-
-      - name: Set Up CommandBox
-        uses: elpete/setup-commandbox@v1.0.0
-      
-      - name: Install dependencies
-        run: box install
-
-      - name: Start server
-        run: |
-          cd tests
-          box config set verboseErrors=true
-          box set cfconfig_robustExceptionEnabled=true
-          box server start cfengine=${{ matrix.cfengine }} --noSaveSettings
-
-      - name: Run TestBox Tests
-        run: box testbox run runner=http://localhost:8011/index.cfm
-
-  format:
-    runs-on: ubuntu-latest
-    name: Format
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - uses: Ortus-Solutions/commandbox-action@v1.0.2
         with:

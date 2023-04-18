@@ -15,14 +15,7 @@
     "description":"Handle chunked file uploads in ColdBox",
     "type":"modules",
     "dependencies":{},
-    "devDependencies":{
-        "coldbox":"^6.0.0",
-        "testbox":"^4.0.0"
-    },
-    "installPaths":{
-        "testbox":"testbox/",
-        "coldbox":"tests/resources/app/coldbox/"
-    },
+    "devDependencies":{},
     "scripts":{
         "postVersion":"package set location='michaelborn/UpChunk#v`package version`'",
         "format":"cfformat run --overwrite models,tests/specs",
