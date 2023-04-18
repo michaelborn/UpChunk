@@ -27,24 +27,41 @@ component
 
     /**
      * Inspect the provided form scope and return info about the current upload (if it is an upload.)
-     * 
+     *
      * @memento the form scope containing upload parameters. You can pass this from a handler via `UpChunk.handleUpload( arguments.rc )`
      */
     public struct function parseUpload( required struct memento ){
-
         // TODO: Move to extendable `validateUpload()` method
         var defaultValidationError = "`{field}` parameter is required for chunked uploads.";
-        if ( !arguments.memento.keyExists( settings.fields.filename ) ){
-            throw( message = replace( defaultValidationError, '{field}', settings.fields.filename, "ALL" ) );
+        if ( !arguments.memento.keyExists( settings.fields.filename ) ) {
+            throw(
+                message = replace(
+                    defaultValidationError,
+                    "{field}",
+                    settings.fields.filename,
+                    "ALL"
+                )
+            );
         }
-        if ( !arguments.memento.keyExists( settings.fields.file ) ){
-            throw( message = replace( defaultValidationError, '{field}', settings.fields.file, "ALL" ) );
+        if ( !arguments.memento.keyExists( settings.fields.file ) ) {
+            throw(
+                message = replace(
+                    defaultValidationError,
+                    "{field}",
+                    settings.fields.file,
+                    "ALL"
+                )
+            );
         }
 
-        var chunkIndex = arguments.memento.keyExists( settings.fields.chunkIndex ) ? arguments.memento[ settings.fields.chunkIndex ] : -1;
-        var totalChunks = arguments.memento.keyExists( settings.fields.totalChunks ) ? arguments.memento[ settings.fields.totalChunks ] : 0;
+        var chunkIndex = arguments.memento.keyExists( settings.fields.chunkIndex ) ? arguments.memento[
+            settings.fields.chunkIndex
+        ] : -1;
+        var totalChunks = arguments.memento.keyExists( settings.fields.totalChunks ) ? arguments.memento[
+            settings.fields.totalChunks
+        ] : 0;
 
-        if ( settings.isIndexZeroBased ){
+        if ( settings.isIndexZeroBased ) {
             chunkIndex = chunkIndex + 1;
         }
 
@@ -106,8 +123,8 @@ component
         interceptorService.announce( "UpChunk_postUpload", upload );
 
         return {
-            isPartial: upload.isChunked && !upload.isFinalChunk,
-            finalFile: finalFile
+            isPartial : upload.isChunked && !upload.isFinalChunk,
+            finalFile : finalFile
         };
     }
 

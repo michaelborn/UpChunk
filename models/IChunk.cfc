@@ -6,7 +6,7 @@ interface {
 
     /**
      * Inspect the provided form scope and return info about the current upload (if it is an upload.)
-     * 
+     *
      * @memento the form scope containing upload parameters. You can pass this from a handler via `UpChunk.handleUpload( arguments.rc )`
      */
     public struct function parseUpload( required struct memento );
