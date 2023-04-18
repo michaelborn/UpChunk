@@ -1,8 +1,8 @@
 {
     "name":"UpChunk",
-    "version":"2.1.0",
+    "version":"2.2.0",
     "author":"Michael Born",
-    "location":"michaelborn/UpChunk#v2.1.0",
+    "location":"michaelborn/UpChunk#v2.2.0",
     "homepage":"https://github.com/michaelborn/UpChunk",
     "documentation":"https://github.com/michaelborn/UpChunk",
     "repository":{
@@ -24,7 +24,7 @@
         "generateAPIDocs":"touch .tmp && rm .tmp --recurse --force && docbox generate mapping=UpChunk excludes=tests|coldbox|testbox strategy-outputDir=.tmp/apidocs strategy-projectTitle=UpChunk",
         "commitAPIDocs":"run-script generateAPIDocs && !git add docs/apidocs/* && !git commit -m 'Updated API Docs'"
     },
-	"testbox":{
+    "testbox":{
         "runner":"http://localhost:60299/tests/runner.cfm"
     },
     "ignore":[
