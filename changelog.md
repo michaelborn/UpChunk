@@ -1,5 +1,11 @@
-# v2.1.0
-## 17 Apr 2023
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [Unreleased]
 
 ## Changed
 
@@ -11,8 +17,7 @@
 * Fix virtual mapping for interface name
  ([2a78ef6](https://github.com/michaelborn/UpChunk/pull/5/commits/2a78ef6900ccab3053aa4e563ac72267c2b8816a)) Thanks [@murpg](https://github.com/murpg)!
 
-# v2.0.2
-## 03 Nov 2021
+## [2.0.2] - 2021-11-03
 
 ### Fixed
 
@@ -20,8 +25,7 @@
  ([8519bc4](https://github.com/michaelborn/UpChunk/commit/8519bc435833a0c79fa9af8aa1d63715a6a5b79e))
 
 
-# v2.0.1
-## 11 Aug 2021
+## v2.0.1 - 2021-08-11
 
 ### Fixed
 
