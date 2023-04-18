@@ -24,13 +24,12 @@
         "generateAPIDocs":"touch .tmp && rm .tmp --recurse --force && docbox generate mapping=UpChunk excludes=tests|coldbox|testbox strategy-outputDir=.tmp/apidocs strategy-projectTitle=UpChunk",
         "commitAPIDocs":"run-script generateAPIDocs && !git add docs/apidocs/* && !git commit -m 'Updated API Docs'"
     },
-    "testbox":{
-        "runner":"http://localhost:60299/index.cfm"
+	"testbox":{
+        "runner":"http://localhost:60299/tests/runner.cfm"
     },
     "ignore":[
         "**/.*",
-        "test",
-        "tests",
+        "test-harness",
         "cookie.png"
     ],
     "license":[
