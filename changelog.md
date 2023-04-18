@@ -1,7 +1,12 @@
 # v2.1.0
 ## 17 Apr 2023
 
-### FIX
+## Changed
+
+* Updated test harness and workflows
+* Updated Github Actions CI builds
+
+### Fixed
 
 * Fix virtual mapping for interface name
  ([2a78ef6](https://github.com/michaelborn/UpChunk/pull/5/commits/2a78ef6900ccab3053aa4e563ac72267c2b8816a)) Thanks [@murpg](https://github.com/murpg)!
@@ -9,7 +14,7 @@
 # v2.0.2
 ## 03 Nov 2021
 
-### FIX
+### Fixed
 
 * Correct release workflow
  ([8519bc4](https://github.com/michaelborn/UpChunk/commit/8519bc435833a0c79fa9af8aa1d63715a6a5b79e))
@@ -18,7 +23,7 @@
 # v2.0.1
 ## 11 Aug 2021
 
-### FIX
+### Fixed
 
 * Use Github artifacts committer to commit new box.json version
  ([fca7f61](https://github.com/michaelborn/UpChunk/commit/fca7f613a91a923465522349b684c469e154071f))
