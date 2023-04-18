@@ -25,7 +25,7 @@
         "commitAPIDocs":"run-script generateAPIDocs && !git add docs/apidocs/* && !git commit -m 'Updated API Docs'"
     },
     "testbox":{
-        "runner":"http://localhost:8011/index.cfm"
+        "runner":"http://localhost:60299/index.cfm"
     },
     "ignore":[
         "**/.*",
