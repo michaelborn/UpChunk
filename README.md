@@ -58,7 +58,7 @@ moduleSettings = {
 
 By default, UpChunk ships with DropZone-compatible `fields` config. See #Configuration for more details.
 
-3. In your ColdBox handler, inject and init your vendor of choice, like `DropZone@UpChunk`.
+3. In your ColdBox handler, inject `UpChunk@upchunk`.
 4. Run the `handleUpload()` method, making sure to pass the current `rc` object:
 
 ```js
